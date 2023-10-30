@@ -35,15 +35,15 @@ const handleNewUser = async (req, res) => {
 
 const updateUserById = async (req, res) => {
 	const userId = req.params.id;
-	const { name, email, role } = req.body;
+	const { name, email, roles } = req.body;
 	if (!userId) return res.status(400).json({ message: "User id is required" });
 	const user = await User.findOne({ _id: userId }).exec();
 	if (!user) return res.status(404).json({ message: "This user is not found" });
 
-	if (!name || !email || !role) return res.status(400).json("Please fill up all inputs");
+	if (!name || !email || !roles) return res.status(400).json("Please fill up all inputs");
 	if (name) user.name = name;
 	if (email) user.email = email;
-	if (role) user.roles = { ...JSON.parse(role) };
+	if (roles) user.roles = { ...JSON.parse(roles) };
 
 	const result = await user.save();
 
