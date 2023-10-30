@@ -18,7 +18,6 @@ const getUserById = async (req, res) => {
 const handleNewUser = async (req, res) => {
 	const { name, email, password, roles } = req.body;
 	if (!name || !email || !password) return res.status(400).json({ message: "Please fill up all inputs." });
-
 	const duplicate = await User.findOne({ email }).exec();
 	if (duplicate) return res.status(409).json({ message: "This email is already used!" });
 
@@ -28,7 +27,7 @@ const handleNewUser = async (req, res) => {
 		name,
 		email,
 		password: hashedPwd,
-		roles,
+		roles: JSON.parse(roles),
 	});
 
 	res.status(201).json({ message: `User ${name} is created!`, data: user });
@@ -41,10 +40,10 @@ const updateUserById = async (req, res) => {
 	const user = await User.findOne({ _id: userId }).exec();
 	if (!user) return res.status(404).json({ message: "This user is not found" });
 
-	if (!name || !email || role) return res.status(400).json("Please fill up all inputs");
+	if (!name || !email || !role) return res.status(400).json("Please fill up all inputs");
 	if (name) user.name = name;
 	if (email) user.email = email;
-	if (role) user.roles = role;
+	if (role) user.roles = { ...JSON.parse(role) };
 
 	const result = await user.save();
 
