@@ -8,7 +8,14 @@ const productSchema = mongoose.Schema(
 		discount: Number,
 		quantity: { type: Number, default: 1 },
 		rating: String,
+		categories: [
+			{
+				type: Object,
+				ref: "Category",
+			},
+		],
 	},
+
 	{ timestamps: true }
 );
 
