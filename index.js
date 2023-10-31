@@ -26,6 +26,7 @@ app.use("/api/logout", require("./routes/logout"));
 app.use(verifyJWT);
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/products", require("./routes/api/products"));
+app.use("/api/categories", require("./routes/api/categories"));
 
 mongoose.connection.once("open", () => {
 	console.log("Connected to MongoDb");
