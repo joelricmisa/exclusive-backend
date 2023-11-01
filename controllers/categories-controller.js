@@ -3,7 +3,7 @@ const Product = require("../models/Product");
 
 const getAllCategories = async (req, res) => {
 	try {
-		const categories = await Category.find();
+		const categories = await Category.find({}, "categoryName products").populate("products", "name image price quantity").exec();
 		if (!categories) return res.sendStatus(204);
 		res.status(200).json({ data: categories });
 	} catch (err) {
@@ -14,7 +14,7 @@ const getCategoryById = async (req, res) => {
 	try {
 		const categoryId = req.params.id;
 		if (!categoryId) return res.status(400).json({ message: "Category id is required" });
-		const category = await Category.findOne({ _id: categoryId }).exec();
+		const category = await Category.findOne({ _id: categoryId }).exec().catch();
 		if (!category) return res.status(404).json({ message: "Category is not found" });
 		res.status(200).json({ data: category });
 	} catch (err) {
@@ -29,13 +29,14 @@ const handleNewCategory = async (req, res) => {
 		const duplicate = await Category.findOne({ categoryName: name }).exec();
 		if (duplicate) return res.status(409).json({ message: "This name is already used" });
 
+		const product = await Product.findOne({ name: productName });
+
 		const category = await Category.create({
 			categoryName: name,
-			products: productName,
+			products: product._id,
 		});
 
-		const product = await Product.findOne({ name: productName });
-		product.categories.push(category);
+		product.categories = category._id;
 		const result = await product.save();
 
 		res.status(201).json({ message: `${name} category is created!`, product: result, category: category });
