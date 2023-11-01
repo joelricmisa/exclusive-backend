@@ -8,21 +8,24 @@ const connectDB = require("./configs/connect-db");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const verifyJWT = require("./middlewares/verify-jwt");
+const corsOptions = require("./configs/cors-options");
+const credentials = require("./middlewares/credentials");
 
 connectDB();
-
-app.use(cors());
+//middlewares
+app.use(credentials);
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
-
+//routes
 app.use("/", require("./routes/root"));
 app.use("/api/register", require("./routes/register"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/refresh", require("./routes/refresh-token"));
 app.use("/api/logout", require("./routes/logout"));
-
+//protected routes
 app.use(verifyJWT);
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/products", require("./routes/api/products"));
