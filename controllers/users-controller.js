@@ -15,8 +15,10 @@ const getUserById = async (req, res) => {
 	try {
 		const userId = req.params.id;
 		if (!userId) return res.status(400).json({ message: "User id is required!" });
-		const user = await User.findOne({ _id: userId }, "-password").exec();
-		if (!user) return res.sendStatus(204);
+
+		const user = await User.findById(userId, "-password").exec();
+		if (!user) return res.sendStatus(404);
+
 		res.status(200).json({ data: user });
 	} catch (err) {
 		res.status(400).json({ error: err.message });
@@ -27,6 +29,7 @@ const handleNewUser = async (req, res) => {
 	try {
 		const { name, email, password, roles } = req.body;
 		if (!name || !email || !password) return res.status(400).json({ message: "Please fill up all inputs." });
+
 		const duplicate = await User.findOne({ email }).exec();
 		if (duplicate) return res.status(409).json({ message: "This email is already used!" });
 
@@ -47,18 +50,20 @@ const handleNewUser = async (req, res) => {
 
 const updateUserById = async (req, res) => {
 	try {
-		const userId = req.params.id;
 		const { name, email, roles } = req.body;
+		const userId = req.params.id;
+
 		if (!userId) return res.status(400).json({ message: "User id is required" });
-		const user = await User.findOne({ _id: userId }).exec();
+
+		const user = await User.findById(userId).exec();
+
 		if (!user) return res.status(404).json({ message: "This user is not found" });
 
-		if (!name || !email || !roles) return res.status(400).json("Please fill up all inputs");
-		if (name) user.name = name;
-		if (email) user.email = email;
-		if (roles) user.roles = { ...JSON.parse(roles) };
+		if (!name || !email || !roles) return res.status(400).json({ message: "Please fill up all inputs" });
 
-		const result = await user.save();
+		await User.updateOne({ _id: userId }, { ...req.body, roles: JSON.parse(roles) }).exec();
+
+		const result = await User.findById(userId).exec();
 
 		res.status(200).json({ message: "User is updated", data: result });
 	} catch (err) {
@@ -71,7 +76,7 @@ const deleteUserById = async (req, res) => {
 		const userId = req.params.id;
 		if (!userId) return res.status(400).json({ message: "User id is required" });
 
-		const user = await User.findOne({ _id: userId }).exec();
+		const user = await User.findById(userId).exec();
 		if (!user) return res.status(404).json({ message: "User is not found" });
 
 		const result = await user.deleteOne();
