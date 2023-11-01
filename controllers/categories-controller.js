@@ -3,7 +3,9 @@ const Product = require("../models/Product");
 
 const getAllCategories = async (req, res) => {
 	try {
-		const categories = await Category.find({}, "categoryName products").populate("products", "name image price quantity").exec();
+		const categories = await Category.find({}, "categoryName products")
+			.populate("products", "name image price discount quantity rating")
+			.exec();
 		if (!categories) return res.sendStatus(204);
 		res.status(200).json({ data: categories });
 	} catch (err) {
@@ -26,7 +28,9 @@ const handleNewCategory = async (req, res) => {
 		const { name, productName } = req.body;
 
 		if (!name) return res.status(400).json({ message: "Name is required" });
-		const duplicate = await Category.findOne({ categoryName: name }).exec();
+		const duplicate = await Category.findOne({ categoryName: name })
+			.populate("products", "name image price discount quantity rating")
+			.exec();
 		if (duplicate) return res.status(409).json({ message: "This name is already used" });
 
 		const product = await Product.findOne({ name: productName });
