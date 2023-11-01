@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const verifyJWT = require("./middlewares/verify-jwt");
 const corsOptions = require("./configs/cors-options");
 const credentials = require("./middlewares/credentials");
+const handleError = require("./middlewares/error-handler");
 
 connectDB();
 //middlewares
@@ -30,6 +31,15 @@ app.use(verifyJWT);
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/products", require("./routes/api/products"));
 app.use("/api/categories", require("./routes/api/categories"));
+
+app.all("*", (req, res, next) => {
+	const err = new Error("404 Not Found");
+	err.status = 404;
+	next(err);
+});
+
+//error handler
+app.use(handleError);
 
 mongoose.connection.once("open", () => {
 	console.log("Connected to MongoDb");
