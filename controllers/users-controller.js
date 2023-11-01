@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const getAllUsers = async (req, res) => {
 	try {
-		const users = await User.find();
+		const users = await User.find({}, "-password").exec();
 		if (!users) return res.sendStatus(204);
 		res.status(200).json({ data: users });
 	} catch (err) {
@@ -15,7 +15,7 @@ const getUserById = async (req, res) => {
 	try {
 		const userId = req.params.id;
 		if (!userId) return res.status(400).json({ message: "User id is required!" });
-		const user = await User.findOne({ _id: userId }).exec();
+		const user = await User.findOne({ _id: userId }, "-password").exec();
 		if (!user) return res.sendStatus(204);
 		res.status(200).json({ data: user });
 	} catch (err) {

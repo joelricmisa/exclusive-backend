@@ -18,6 +18,8 @@ const handleNewUser = async (req, res) => {
 			password: hashedPwd,
 		});
 
+		result.password = "Encrypted";
+
 		res.status(201).json({ message: `User ${name} is created!`, data: result });
 	} catch (err) {
 		res.status(500).json({ error: err.message });
