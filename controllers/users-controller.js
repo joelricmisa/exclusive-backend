@@ -42,6 +42,8 @@ const handleNewUser = async (req, res) => {
 			roles: JSON.parse(roles),
 		});
 
+		user.password = "Encrypted";
+
 		res.status(201).json({ message: `User ${name} is created!`, data: user });
 	} catch (err) {
 		res.status(500).json({ error: err.message });
