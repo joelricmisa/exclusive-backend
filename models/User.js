@@ -6,6 +6,7 @@ const userSchema = new Schema(
 		name: { type: String, required: true },
 		email: { type: String, required: true },
 		password: { type: String, required: true },
+		refreshToken: String,
 		roles: {
 			user: {
 				type: Number,
@@ -14,8 +15,6 @@ const userSchema = new Schema(
 			editor: Number,
 			admin: Number,
 		},
-
-		refreshToken: String,
 	},
 	{ timestamps: true }
 );

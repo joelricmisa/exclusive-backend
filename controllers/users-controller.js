@@ -3,9 +3,24 @@ const bcrypt = require("bcrypt");
 
 const getAllUsers = async (req, res) => {
 	try {
-		const users = await User.find({}, "-password").exec();
+		const users = await User.find({}, "-password -__v").exec();
 		if (!users) return res.sendStatus(204);
-		res.status(200).json({ data: users });
+		console.log(users);
+		res.status(200).json({
+			message: "Users displayed successfully",
+			status: "ok",
+			status_code: 200,
+			usersCount: users.length,
+			data: users.map((doc) => {
+				return {
+					id: doc._id,
+					name: doc.name,
+					email: doc.email,
+					refreshToken: doc.refreshToken,
+					roles: doc.roles,
+				};
+			}),
+		});
 	} catch (err) {
 		res.status(500).json({ err: err.message });
 	}
@@ -16,7 +31,7 @@ const getUserById = async (req, res) => {
 		const userId = req.params.id;
 		if (!userId) return res.status(400).json({ message: "User id is required!" });
 
-		const user = await User.findById(userId, "-password").exec();
+		const user = await User.findById(userId, "-password -__v").exec();
 		if (!user) return res.sendStatus(404);
 
 		res.status(200).json({ data: user });
