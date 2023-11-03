@@ -14,6 +14,7 @@ const handleLogin = async (req, res) => {
 
 		if (match) {
 			const role = Object.values(user.roles).filter(Boolean);
+
 			const accessToken = jwt.sign(
 				{
 					userInfo: {
@@ -40,7 +41,13 @@ const handleLogin = async (req, res) => {
 
 			res.cookie("jwt", refreshToken, { httpOnly: true, secure: true, sameSite: "None", maxAge: 24 * 60 * 60 * 1000 });
 
-			res.status(200).json({ message: "Login Success!", accessToken, role });
+			res.status(200).json({
+				message: "Authenticated",
+				status: "ok",
+				status_code: 200,
+				accessToken,
+				role,
+			});
 		} else {
 			res.status(401).json({ message: "Invalid Credentials" });
 		}

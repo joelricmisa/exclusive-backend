@@ -5,7 +5,14 @@ const getAllCategories = async (req, res) => {
 	try {
 		const categories = await Category.find({}, "name products").populate("products", "name image price discount quantity rating").exec();
 		if (!categories) return res.sendStatus(204);
-		res.status(200).json({ data: categories });
+
+		res.status(200).json({
+			message: "Categories displayed successfully",
+			status: "ok",
+			status_code: 200,
+			categoriesCount: categories.length,
+			data: categories,
+		});
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
@@ -15,11 +22,18 @@ const getCategoryById = async (req, res) => {
 	try {
 		const categoryId = req.params.id;
 		if (!categoryId) return res.status(400).json({ message: "Category id is required" });
+
 		const category = await Category.findById(categoryId, "name products")
 			.populate("products", "name image price discount quantity rating")
 			.exec();
 		if (!category) return res.status(404).json({ message: "Category is not found" });
-		res.status(200).json({ data: category });
+
+		res.status(200).json({
+			message: "Category displayed successfully",
+			status: "ok",
+			status_code: 200,
+			data: category,
+		});
 	} catch (err) {
 		res.status(400).json({ error: err.message });
 	}
@@ -30,6 +44,7 @@ const handleNewCategory = async (req, res) => {
 		const { name, productName } = req.body;
 
 		if (!name) return res.status(400).json({ message: "Name is required" });
+
 		const duplicate = await Category.findOne({ name }).exec();
 		if (duplicate) return res.status(409).json({ message: "This name is already used" });
 
@@ -42,7 +57,12 @@ const handleNewCategory = async (req, res) => {
 
 		await Product.updateOne({ _id: product.id }, { categories: category._id });
 
-		res.status(201).json({ message: `${name} category is created!`, data: category });
+		res.status(201).json({
+			message: `${name} category is created!`,
+			status: "created",
+			status_code: 201,
+			data: category,
+		});
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
@@ -62,7 +82,12 @@ const updateCategoryById = async (req, res) => {
 
 		const result = await Category.findById(categoryId).exec();
 
-		res.status(200).json({ message: "Updated Category", data: result });
+		res.status(200).json({
+			message: `${result.name} category is updated successfully`,
+			status: "ok",
+			status_code: 200,
+			data: result,
+		});
 	} catch (err) {
 		res.status(400).json({ error: err.message });
 	}
@@ -77,7 +102,12 @@ const deleteCategoryById = async (req, res) => {
 		if (!category) return res.status(404).json({ message: "This category is not found" });
 
 		const result = await category.deleteOne();
-		res.status(200).json({ message: "This category has been removed", data: result });
+		res.status(200).json({
+			message: `${result.name} category is deleted successfully`,
+			status: "ok",
+			status_code: 200,
+			data: result,
+		});
 	} catch (err) {
 		res.status(400).json({ error: err.message });
 	}

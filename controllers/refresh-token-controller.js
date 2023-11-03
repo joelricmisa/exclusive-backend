@@ -20,7 +20,12 @@ const handleRefreshToken = async (req, res) => {
 				{ expiresIn: "1d" }
 			);
 
-			res.status(200).json({ message: "refresh token", accessToken });
+			res.status(200).json({
+				message: "Displayed refresh token successfully",
+				status: "ok",
+				status_code: 200,
+				accessToken,
+			});
 		});
 	} catch (err) {
 		res.status(500).json({ error: err.message });

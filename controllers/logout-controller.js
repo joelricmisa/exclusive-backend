@@ -4,7 +4,9 @@ const handleLogout = async (req, res) => {
 	try {
 		const cookies = req.cookies;
 		if (!cookies.jwt) return res.sendStatus(204);
+
 		const refreshToken = cookies.jwt;
+
 		const user = await User.findOne({ refreshToken }).exec();
 		if (!user) {
 			res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "None" });
@@ -15,7 +17,12 @@ const handleLogout = async (req, res) => {
 		user.save();
 
 		res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "None" });
-		res.status(200).json({ user: user.name, message: "Logout Success!" });
+		res.status(200).json({
+			message: "Logout Successfully!",
+			status: "ok",
+			status_code: 200,
+			user: user.name,
+		});
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}

@@ -5,21 +5,13 @@ const getAllUsers = async (req, res) => {
 	try {
 		const users = await User.find({}, "-password -__v").exec();
 		if (!users) return res.sendStatus(204);
-		console.log(users);
+
 		res.status(200).json({
 			message: "Users displayed successfully",
 			status: "ok",
 			status_code: 200,
 			usersCount: users.length,
-			data: users.map((doc) => {
-				return {
-					id: doc._id,
-					name: doc.name,
-					email: doc.email,
-					refreshToken: doc.refreshToken,
-					roles: doc.roles,
-				};
-			}),
+			data: users,
 		});
 	} catch (err) {
 		res.status(500).json({ err: err.message });
@@ -34,7 +26,12 @@ const getUserById = async (req, res) => {
 		const user = await User.findById(userId, "-password -__v").exec();
 		if (!user) return res.sendStatus(404);
 
-		res.status(200).json({ data: user });
+		res.status(200).json({
+			message: "User displayed successfully",
+			status: "ok",
+			status_code: 200,
+			data: user,
+		});
 	} catch (err) {
 		res.status(400).json({ error: err.message });
 	}
@@ -59,7 +56,12 @@ const handleNewUser = async (req, res) => {
 
 		user.password = "Encrypted";
 
-		res.status(201).json({ message: `User ${name} is created!`, data: user });
+		res.status(201).json({
+			message: `User ${name} is created!`,
+			status: "created",
+			status_code: 201,
+			data: user,
+		});
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
@@ -82,7 +84,12 @@ const updateUserById = async (req, res) => {
 
 		const result = await User.findById(userId).exec();
 
-		res.status(200).json({ message: "User is updated", data: result });
+		res.status(200).json({
+			message: `User ${name} is updated sucessfully`,
+			status: "ok",
+			status_code: 200,
+			data: result,
+		});
 	} catch (err) {
 		res.status(400).json({ error: err.message });
 	}
@@ -97,7 +104,13 @@ const deleteUserById = async (req, res) => {
 		if (!user) return res.status(404).json({ message: "User is not found" });
 
 		const result = await user.deleteOne();
-		res.status(200).json({ message: "User is deleted", data: result });
+
+		res.status(200).json({
+			message: `User ${user.name} is deleted sucessfully`,
+			status: "ok",
+			status_code: 200,
+			data: result,
+		});
 	} catch (err) {
 		res.status(400).json({ error: err.message });
 	}
