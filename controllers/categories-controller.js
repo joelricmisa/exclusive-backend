@@ -74,7 +74,7 @@ const updateCategoryById = async (req, res) => {
 		const categoryId = req.params.id;
 
 		if (!categoryId) return res.status(400).json({ message: "Category id is required" });
-		if (!bodyData.categoryName) return res.status(400).json({ message: "Name is required" });
+		if (!bodyData.name) return res.status(400).json({ message: "Name is required" });
 
 		const category = await Category.updateOne({ _id: categoryId }, { ...bodyData }).exec();
 

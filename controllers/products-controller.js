@@ -21,7 +21,7 @@ const getProductById = async (req, res) => {
 		const productId = req.params.id;
 		if (!productId) return res.status(400).json({ message: "Product id is required" });
 
-		const product = await Product.findById(productId, "-__v").populate("categories", "categoryName").exec();
+		const product = await Product.findById(productId, "-__v").populate("categories", "name").exec();
 		if (!product) return res.status(404).json({ message: "This product id is not found" });
 
 		res.status(200).json({
@@ -47,7 +47,7 @@ const handleNewProduct = async (req, res) => {
 		const product = await Product.create({ ...req.body });
 
 		res.status(201).json({
-			message: `${name} is created!`,
+			message: `Product ${name} is created!`,
 			status: "created",
 			status_code: 201,
 			data: product,
