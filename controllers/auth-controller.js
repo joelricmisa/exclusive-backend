@@ -20,6 +20,7 @@ const handleLogin = async (req, res) => {
 					userInfo: {
 						name: user.name,
 						role,
+						id: user._id,
 					},
 				},
 				process.env.ACCESS_TOKEN,

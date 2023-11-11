@@ -37,6 +37,25 @@ const getUserById = async (req, res) => {
 	}
 };
 
+const getCurrentUser = async (req, res) => {
+	try {
+		const id = req.id;
+		if (!id) return res.sendStatus(401);
+
+		const user = await User.findById(id, "-password -__v").exec();
+		if (!user) return res.sendStatus(401);
+
+		res.status(200).json({
+			message: "Get current user successfully",
+			status: "ok",
+			status_code: 200,
+			data: user,
+		});
+	} catch (err) {
+		res.status(400).json({ error: err.message });
+	}
+};
+
 const handleNewUser = async (req, res) => {
 	try {
 		const { name, email, password, roles } = req.body;
@@ -116,4 +135,4 @@ const deleteUserById = async (req, res) => {
 	}
 };
 
-module.exports = { getAllUsers, getUserById, handleNewUser, updateUserById, deleteUserById };
+module.exports = { getAllUsers, getUserById, getCurrentUser, handleNewUser, updateUserById, deleteUserById };
