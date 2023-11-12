@@ -42,7 +42,7 @@ const getCurrentUser = async (req, res) => {
 		const id = req.id;
 		if (!id) return res.sendStatus(401);
 
-		const user = await User.findById(id, "-password -__v").exec();
+		const user = await User.findById(id, "_id name firstname lastname email address").exec();
 		if (!user) return res.sendStatus(401);
 
 		res.status(200).json({
@@ -97,7 +97,7 @@ const updateUserById = async (req, res) => {
 
 		if (!user) return res.status(404).json({ message: "This user is not found" });
 
-		if (!name || !email || !roles) return res.status(400).json({ message: "Please fill up all inputs" });
+		if (!name || !email) return res.status(400).json({ message: "Please fill up all inputs" });
 
 		await User.updateOne({ _id: userId }, { ...req.body, roles: JSON.parse(roles) }).exec();
 
