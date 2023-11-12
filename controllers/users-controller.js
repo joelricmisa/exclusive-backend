@@ -88,7 +88,7 @@ const handleNewUser = async (req, res) => {
 
 const updateUserById = async (req, res) => {
 	try {
-		const { name, email, roles } = req.body;
+		const { name, email } = req.body;
 		const userId = req.params.id;
 
 		if (!userId) return res.status(400).json({ message: "User id is required" });
@@ -99,7 +99,9 @@ const updateUserById = async (req, res) => {
 
 		if (!name || !email) return res.status(400).json({ message: "Please fill up all inputs" });
 
-		await User.updateOne({ _id: userId }, { ...req.body, roles: JSON.parse(roles) }).exec();
+		await User.updateOne({ _id: userId }, { ...req.body }).exec();
+
+		// for roles 		{...req.body, roles: JSON.parse(roles)}
 
 		const result = await User.findById(userId).exec();
 
