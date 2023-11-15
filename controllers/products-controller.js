@@ -44,7 +44,7 @@ const handleNewProduct = async (req, res) => {
 
 		if (duplicate) return res.status(409).json({ message: "This product name is already used!" });
 
-		const product = await Product.create({ ...req.body });
+		const product = await Product.create({ ...req.body, image: req.file.path });
 
 		res.status(201).json({
 			message: `Product ${name} is created!`,

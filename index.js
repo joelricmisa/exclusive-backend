@@ -26,6 +26,7 @@ app.use("/api/register", require("./routes/register"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/refresh", require("./routes/refresh-token"));
 app.use("/api/logout", require("./routes/logout"));
+
 //protected routes
 app.use(verifyJWT);
 app.use("/api/users", require("./routes/api/users"));
