@@ -11,7 +11,7 @@ router
 
 router
 	.route("/:id")
-	.get(verifyRole(ROLE.admin), categoriesController.getCategoryById)
+	.get(categoriesController.getCategoryById)
 	.put(verifyRole(ROLE.admin), categoriesController.updateCategoryById)
 	.delete(verifyRole(ROLE.admin), categoriesController.deleteCategoryById);
 
