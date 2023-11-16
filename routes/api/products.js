@@ -3,6 +3,7 @@ const router = express.Router();
 const productsController = require("../../controllers/products-controller");
 const ROLE = require("../../configs/roles-list");
 const verifyRole = require("../../middlewares/verify-role");
+const verifyJWT = require("../../middlewares/verify-jwt");
 const multer = require("multer");
 
 const storage = multer.diskStorage({
@@ -32,13 +33,13 @@ const upload = multer({
 
 router
 	.route("/")
-	.get(verifyRole(ROLE.admin), productsController.getAllProducts)
-	.post(verifyRole(ROLE.admin), upload.single("image"), productsController.handleNewProduct);
+	.get(productsController.getAllProducts)
+	.post(verifyJWT, verifyRole(ROLE.admin), upload.single("image"), productsController.handleNewProduct);
 
 router
 	.route("/:id")
-	.get(verifyRole(ROLE.admin), productsController.getProductById)
-	.put(verifyRole(ROLE.admin), upload.single("image"), productsController.updateProductById)
-	.delete(verifyRole(ROLE.admin), productsController.deleteProductById);
+	.get(productsController.getProductById)
+	.put(verifyJWT, verifyRole(ROLE.admin), upload.single("image"), productsController.updateProductById)
+	.delete(verifyJWT, verifyRole(ROLE.admin), productsController.deleteProductById);
 
 module.exports = router;

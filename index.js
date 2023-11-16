@@ -28,10 +28,10 @@ app.use("/api/refresh", require("./routes/refresh-token"));
 app.use("/api/logout", require("./routes/logout"));
 
 app.use("/api/categories", require("./routes/api/categories"));
+app.use("/api/products", require("./routes/api/products"));
 //protected routes
 app.use(verifyJWT);
 app.use("/api/users", require("./routes/api/users"));
-app.use("/api/products", require("./routes/api/products"));
 
 app.all("*", (req, res, next) => {
 	const err = new Error("404 Not Found");
