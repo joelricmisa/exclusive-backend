@@ -41,21 +41,16 @@ const getCategoryById = async (req, res) => {
 
 const handleNewCategory = async (req, res) => {
 	try {
-		const { name, productName } = req.body;
+		const { name } = req.body;
 
 		if (!name) return res.status(400).json({ message: "Name is required" });
 
 		const duplicate = await Category.findOne({ name }).exec();
 		if (duplicate) return res.status(409).json({ message: "This name is already used" });
 
-		const product = await Product.findOne({ name: productName });
-
 		const category = await Category.create({
 			name,
-			products: product._id,
 		});
-
-		await Product.updateOne({ _id: product.id }, { categories: category._id });
 
 		res.status(201).json({
 			message: `${name} category is created!`,

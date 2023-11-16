@@ -38,7 +38,7 @@ router
 router
 	.route("/:id")
 	.get(verifyRole(ROLE.admin), productsController.getProductById)
-	.put(verifyRole(ROLE.admin), productsController.updateProductById)
+	.put(verifyRole(ROLE.admin), upload.single("image"), productsController.updateProductById)
 	.delete(verifyRole(ROLE.admin), productsController.deleteProductById);
 
 module.exports = router;
