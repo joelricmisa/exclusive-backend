@@ -3,7 +3,7 @@ const Category = require("../models/Category");
 
 const getAllProducts = async (req, res) => {
 	try {
-		const products = await Product.find({}, "-__v").populate("categories", "categoryName").exec();
+		const products = await Product.find({}, "-__v").populate("categories", "name").exec();
 		if (!products) return res.sendStatus(204);
 
 		res.status(200).json({
