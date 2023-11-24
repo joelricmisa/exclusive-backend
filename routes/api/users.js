@@ -5,7 +5,7 @@ const ROLE = require("../../configs/roles-list");
 const verifyRole = require("../../middlewares/verify-role");
 const verifyJWT = require("../../middlewares/verify-jwt");
 
-router.route("/current").get(usersController.getCurrentUser);
+router.route("/current").get(verifyJWT, usersController.getCurrentUser);
 
 router.route("/").get(verifyJWT, verifyRole(ROLE.admin), usersController.getAllUsers).post(usersController.handleNewUser);
 
