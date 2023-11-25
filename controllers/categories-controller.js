@@ -3,7 +3,9 @@ const Product = require("../models/Product");
 
 const getAllCategories = async (req, res) => {
 	try {
-		const categories = await Category.find({}, "name products").populate("products", "name image price discount quantity rating").exec();
+		const categories = await Category.find({}, "name products")
+			.populate("products", "name image price discount quantity rating rate_count")
+			.exec();
 		if (!categories) return res.sendStatus(204);
 
 		res.status(200).json({
@@ -24,7 +26,7 @@ const getCategoryById = async (req, res) => {
 		if (!categoryId) return res.status(400).json({ message: "Category id is required" });
 
 		const category = await Category.findById(categoryId, "name products")
-			.populate("products", "name image price discount quantity rating")
+			.populate("products", "name image price discount quantity rating rate_count")
 			.exec();
 		if (!category) return res.status(404).json({ message: "Category is not found" });
 
