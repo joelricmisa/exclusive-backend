@@ -26,6 +26,8 @@ app.use("/api/register", require("./routes/register"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/refresh", require("./routes/refresh-token"));
 app.use("/api/logout", require("./routes/logout"));
+app.use("/api/forgot-password", require("./routes/forgot-password"));
+app.use("/api/reset-password", require("./routes/reset-password"));
 
 app.use("/api/categories", require("./routes/api/categories"));
 app.use("/api/products", require("./routes/api/products"));
