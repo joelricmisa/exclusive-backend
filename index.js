@@ -30,6 +30,7 @@ app.use("/api/logout", require("./routes/logout"));
 app.use("/api/categories", require("./routes/api/categories"));
 app.use("/api/products", require("./routes/api/products"));
 //protected routes
+app.use("/api/change-password", require("./routes/change-password"));
 
 app.use("/api/users", require("./routes/api/users"));
 
