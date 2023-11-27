@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passwordController = require("../controllers/password-controller");
-const verifyJWT = require("../middlewares/verify-jwt");
 
-router.post("/", verifyJWT, passwordController.handleChangePassword);
+router.post("/", passwordController.handleForgotPassword);
+
 module.exports = router;
