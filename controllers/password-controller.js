@@ -51,7 +51,7 @@ const handleForgotPassword = async (req, res) => {
 
 		// console.log(resetToken);
 		// console.log(req.headers.host);
-		const resetLink = `http://localhost:5173/reset/${resetToken.toString().replaceAll(".", "-")}`;
+		const resetLink = `http://localhost:5173/reset/${resetToken.replace(/\./g, "-")}`;
 		const mailOptions = {
 			from: "exclusive_shop@gmail.com",
 			to: email,
