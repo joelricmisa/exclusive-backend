@@ -1,5 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const Product = require("../models/Product");
+const mongoose = require("mongoose");
 
 const getAllUsers = async (req, res) => {
 	try {
@@ -23,7 +25,7 @@ const getUserById = async (req, res) => {
 		const userId = req.params.id;
 		if (!userId) return res.status(400).json({ message: "User id is required!" });
 
-		const user = await User.findById(userId, "-password -__v").exec();
+		const user = await User.findById(userId, "-password -__v").populate("cart").exec();
 		if (!user) return res.sendStatus(404);
 
 		res.status(200).json({
@@ -42,7 +44,7 @@ const getCurrentUser = async (req, res) => {
 		const id = req.id;
 		if (!id) return res.sendStatus(401);
 
-		const user = await User.findById(id, "_id name firstname lastname email address").exec();
+		const user = await User.findById(id, "-password -__v").exec();
 		if (!user) return res.sendStatus(401);
 
 		res.status(200).json({
@@ -88,7 +90,7 @@ const handleNewUser = async (req, res) => {
 
 const updateUserById = async (req, res) => {
 	try {
-		const { name, email } = req.body;
+		const { name, email, productIds } = req.body;
 		const userId = req.params.id;
 
 		if (!userId) return res.status(400).json({ message: "User id is required" });
@@ -99,11 +101,23 @@ const updateUserById = async (req, res) => {
 
 		if (!name || !email) return res.status(400).json({ message: "Please fill up all inputs" });
 
-		await User.updateOne({ _id: userId }, { ...req.body }).exec();
+		if (productIds) {
+			const objectIdProductIds = productIds.map((id) => new mongoose.Types.ObjectId(id));
 
-		// for roles 		{...req.body, roles: JSON.parse(roles)}
+			const products = await Product.find({ _id: { $in: objectIdProductIds } }).exec();
 
-		const result = await User.findById(userId).exec();
+			const productIdsToAdd = products.map((product) => product._id);
+
+			await User.updateOne({ _id: userId }, { ...req.body });
+
+			await User.updateOne({ _id: userId }, { $addToSet: { cart: { $each: productIdsToAdd } } });
+		} else {
+			await User.updateOne({ _id: userId }, { ...req.body });
+		}
+
+		// for roles {...req.body, roles: JSON.parse(roles)}
+
+		const result = await User.findById(userId).populate("cart", "name").exec();
 
 		res.status(200).json({
 			message: `User ${name} is updated sucessfully`,
