@@ -30,6 +30,7 @@ const handleLogin = async (req, res) => {
 			const refreshToken = jwt.sign(
 				{
 					user: user.name,
+					role,
 					id: user._id,
 				},
 				process.env.REFRESH_TOKEN,
