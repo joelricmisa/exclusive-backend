@@ -130,6 +130,25 @@ const updateUserById = async (req, res) => {
 	}
 };
 
+const removeProductFromCart = async (req, res) => {
+	try {
+		const userId = req.params.id;
+		const productId = req.params.productId;
+
+		const user = await User.findByIdAndUpdate(userId, { $pull: { cart: productId } }, { new: true });
+
+		res.status(200).json({
+			message: `Product removed from cart successfully`,
+			status: "ok",
+			status_code: 200,
+			data: user,
+		});
+	} catch (err) {
+		console.log(err);
+		return res.status(500).json({ error: err.message });
+	}
+};
+
 const deleteUserById = async (req, res) => {
 	try {
 		const userId = req.params.id;
@@ -151,4 +170,4 @@ const deleteUserById = async (req, res) => {
 	}
 };
 
-module.exports = { getAllUsers, getUserById, getCurrentUser, handleNewUser, updateUserById, deleteUserById };
+module.exports = { getAllUsers, getUserById, getCurrentUser, handleNewUser, updateUserById, deleteUserById, removeProductFromCart };
