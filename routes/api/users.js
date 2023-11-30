@@ -15,4 +15,5 @@ router
 	.put(verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.updateUserById)
 	.delete(verifyJWT, verifyRole(ROLE.admin), usersController.deleteUserById);
 
+router.route("/:id/remove-from-cart/:productId").put(verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.removeProductFromCart);
 module.exports = router;
