@@ -90,7 +90,7 @@ const handleNewUser = async (req, res) => {
 
 const updateUserById = async (req, res) => {
 	try {
-		const { name, email, productIds } = req.body;
+		const { name, email, cartIds, wishlistIds } = req.body;
 		const userId = req.params.id;
 
 		if (!userId) return res.status(400).json({ message: "User id is required" });
@@ -101,16 +101,28 @@ const updateUserById = async (req, res) => {
 
 		if (!name || !email) return res.status(400).json({ message: "Please fill up all inputs" });
 
-		if (productIds) {
-			const objectIdProductIds = productIds.map((id) => new mongoose.Types.ObjectId(id));
+		if (cartIds) {
+			const objectCartIds = cartIds.map((id) => new mongoose.Types.ObjectId(id));
 
-			const products = await Product.find({ _id: { $in: objectIdProductIds } }).exec();
+			const products = await Product.find({ _id: { $in: objectCartIds } }).exec();
 
-			const productIdsToAdd = products.map((product) => product._id);
+			const cartIdsToAdd = products.map((product) => product._id);
 
 			await User.updateOne({ _id: userId }, { ...req.body });
 
-			await User.updateOne({ _id: userId }, { $addToSet: { cart: { $each: productIdsToAdd } } });
+			await User.updateOne({ _id: userId }, { $addToSet: { cart: { $each: cartIdsToAdd } } });
+			//
+		} else if (wishlistIds) {
+			const objectWishlistIds = wishlistIds.map((id) => new mongoose.Types.ObjectId(id));
+
+			const products = await Product.find({ _id: { $in: objectWishlistIds } }).exec();
+
+			const wishlistIdsToAdd = products.map((product) => product._id);
+
+			await User.updateOne({ _id: userId }, { ...req.body });
+
+			await User.updateOne({ _id: userId }, { $addToSet: { wishlist: { $each: wishlistIdsToAdd } } });
+			//
 		} else {
 			await User.updateOne({ _id: userId }, { ...req.body });
 		}
@@ -149,6 +161,25 @@ const removeProductFromCart = async (req, res) => {
 	}
 };
 
+const removeProductFromWishlist = async (req, res) => {
+	try {
+		const userId = req.params.id;
+		const productId = req.params.productId;
+
+		const user = await User.findByIdAndUpdate(userId, { $pull: { wishlist: productId } }, { new: true });
+
+		res.status(200).json({
+			message: `Product removed from wishlist successfully`,
+			status: "ok",
+			status_code: 200,
+			data: user,
+		});
+	} catch (err) {
+		console.log(err);
+		return res.status(500).json({ error: err.message });
+	}
+};
+
 const deleteUserById = async (req, res) => {
 	try {
 		const userId = req.params.id;
@@ -170,4 +201,13 @@ const deleteUserById = async (req, res) => {
 	}
 };
 
-module.exports = { getAllUsers, getUserById, getCurrentUser, handleNewUser, updateUserById, deleteUserById, removeProductFromCart };
+module.exports = {
+	getAllUsers,
+	getUserById,
+	getCurrentUser,
+	handleNewUser,
+	updateUserById,
+	deleteUserById,
+	removeProductFromCart,
+	removeProductFromWishlist,
+};
