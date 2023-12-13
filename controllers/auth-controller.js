@@ -46,13 +46,16 @@ const handleLogin = async (req, res) => {
 
 			res.status(200).json({
 				message: "Authenticated",
+				user: user.email,
 				status: "ok",
 				status_code: 200,
 				accessToken,
 				role,
 			});
 		} else {
-			res.status(401).json({ message: "Invalid Credentials" });
+			res.status(401).json({
+				message: "Invalid Credentials, please make sure you have a valid email and a correct password for your account!",
+			});
 		}
 	} catch (err) {
 		res.status(500).json({ error: err.message });
