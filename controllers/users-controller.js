@@ -101,19 +101,10 @@ const updateUserById = async (req, res) => {
 
 		if (!name || !email) return res.status(400).json({ message: "Please fill up all inputs" });
 
-		if (cartIds && cartIds?.length > 0) {
-			console.log("cartIds", cartIds);
+		if (cartIds) {
+			// console.log("cartIds", cartIds);
 
-			const objectCartIds = cartIds.map((id) => {
-				try {
-					return new mongoose.Types.ObjectId(id);
-				} catch (error) {
-					console.error(`Invalid ObjectId: ${id}`);
-					return null;
-				}
-			});
-
-			const validObjectCartIds = objectCartIds.filter((objectId) => objectId !== null);
+			const validObjectCartIds = cartIds.map((id) => new mongoose.Types.ObjectId(id));
 
 			const products = await Product.find({ _id: { $in: validObjectCartIds } }).exec();
 
