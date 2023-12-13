@@ -29,11 +29,11 @@ const handleChangePassword = async (req, res) => {
 };
 
 const transporter = nodemailer.createTransport({
-	host: "smtp-relay.sendinblue.com",
-	port: 587,
+	host: process.env.SMTP_HOST,
+	port: process.env.SMTP_PORT,
 	auth: {
-		user: "joelriccmisa@gmail.com",
-		pass: "RXpO3fH0ZVF6gMQj",
+		user: process.env.SMTP_USER,
+		pass: process.env.SMTP_PASS,
 	},
 });
 
@@ -45,19 +45,19 @@ const handleForgotPassword = async (req, res) => {
 
 		const user = await User.findOne({ email }).exec();
 
-		if (!user) return res.status(404).json({ message: "User is not found" });
+		if (!user) return res.status(404).json({ message: "Email is not found!" });
 
 		const resetToken = await jwt.sign({ id: user._id }, process.env.RESET_TOKEN, { expiresIn: "1h" });
 
 		// console.log(resetToken);
 		// console.log(req.headers.host);
-		const resetLink = `http://localhost:5173/reset/${resetToken.replace(/\./g, "-")}`;
+		const resetLink = `http://localhost:5173/reset/${resetToken.replace(/\./g, "---")}`;
 		const mailOptions = {
-			from: "exclusive_shop@gmail.com",
+			from: process.env.SMTP_FROM,
 			to: email,
-			subject: "Reset Password",
-			html: `<p>Click on the following link to reset your password: 
-            <a href=${resetLink}>Reset Page</> </p>`,
+			subject: "This is for your exclusive's account password reset.",
+			html: `<p>Click on the following link to update your password for your exclusive account: 
+            <a href=${resetLink}>Reset Link</> </p>`,
 		};
 
 		await transporter.sendMail(mailOptions);
