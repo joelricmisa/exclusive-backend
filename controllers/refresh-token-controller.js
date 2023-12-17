@@ -30,6 +30,7 @@ const handleRefreshToken = async (req, res) => {
 				status: "ok",
 				status_code: 200,
 				accessToken,
+				user: user.email,
 			});
 		});
 	} catch (err) {
