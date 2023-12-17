@@ -131,7 +131,7 @@ const updateUserById = async (req, res) => {
 
 		// for roles {...req.body, roles: JSON.parse(roles)}
 
-		const result = await User.findById(userId).populate("cart").exec();
+		const result = await User.findById(userId).populate("cart wishlist").exec();
 
 		res.status(200).json({
 			message: `User ${name} is updated sucessfully`,
@@ -149,7 +149,9 @@ const removeProductFromCart = async (req, res) => {
 		const userId = req.params.id;
 		const productId = req.params.productId;
 
-		const user = await User.findByIdAndUpdate(userId, { $pull: { cart: productId } }, { new: true });
+		await User.updateOne({ _id: userId }, { $pull: { cart: productId } }, { new: true });
+
+		const user = await User.findById(userId).populate("cart").exec();
 
 		res.status(200).json({
 			message: `Product removed from cart successfully`,
@@ -168,7 +170,9 @@ const removeProductFromWishlist = async (req, res) => {
 		const userId = req.params.id;
 		const productId = req.params.productId;
 
-		const user = await User.findByIdAndUpdate(userId, { $pull: { wishlist: productId } }, { new: true });
+		await User.updateOne({ _id: userId }, { $pull: { wishlist: productId } }, { new: true });
+
+		const user = await User.findById(userId).populate("wishlist").exec();
 
 		res.status(200).json({
 			message: `Product removed from wishlist successfully`,
