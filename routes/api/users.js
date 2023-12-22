@@ -15,7 +15,8 @@ router
 	.put(verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.updateUserById)
 	.delete(verifyJWT, verifyRole(ROLE.admin), usersController.deleteUserById);
 
-router.route("/:id/remove-from-cart/:productId").put(verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.removeProductFromCart);
+router.patch("/:id/cart", verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.updateCart);
+router.patch("/:id/cart/remove", verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.removeCartItem);
 
 router
 	.route("/:id/remove-from-wishlist/:productId")
