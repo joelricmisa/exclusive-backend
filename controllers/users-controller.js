@@ -44,7 +44,7 @@ const getCurrentUser = async (req, res) => {
 		const id = req.id;
 		if (!id) return res.sendStatus(401);
 
-		const user = await User.findById(id, "-password -__v").populate({ path: "cart.product_id" }).exec();
+		const user = await User.findById(id, "-password -__v").populate({ path: "cart.product_id" }).populate("wishlist").exec();
 		if (!user) return res.sendStatus(401);
 
 		res.status(200).json({
