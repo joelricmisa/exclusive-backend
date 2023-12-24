@@ -32,6 +32,7 @@ app.use("/api/contact", require("./routes/contact"));
 
 app.use("/api/categories", require("./routes/api/categories"));
 app.use("/api/products", require("./routes/api/products"));
+app.use("/api/orders", require("./routes/api/orders"));
 //protected routes
 app.use("/api/change-password", require("./routes/change-password"));
 
