@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const productsController = require("../../controllers/products-controller");
-const ROLE = require("../../configs/roles-list");
-const verifyRole = require("../../middlewares/verify-role");
-const verifyJWT = require("../../middlewares/verify-jwt");
+const productsController = require("../controllers/products-controller");
+const ROLE = require("../configs/roles-list");
+const verifyRole = require("../middlewares/verify-role");
+const verifyJWT = require("../middlewares/verify-jwt");
 const multer = require("multer");
 
 const storage = multer.diskStorage({

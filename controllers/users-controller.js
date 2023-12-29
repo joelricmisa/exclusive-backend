@@ -194,7 +194,7 @@ const updateCart = async (req, res) => {
 			return res.status(404).json({ error: "Product not found" });
 		}
 
-		const existingCartItem = user.cart.find((item) => item.product_id.equals(product_id));
+		const existingCartItem = user.cart.find((item) => item.product_id?.equals(product_id));
 
 		if (existingCartItem) {
 			existingCartItem.quantity = quantity;

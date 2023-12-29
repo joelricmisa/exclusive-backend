@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const categoriesController = require("../../controllers/categories-controller");
-const ROLE = require("../../configs/roles-list");
-const verifyRole = require("../../middlewares/verify-role");
-const verifyJWT = require("../../middlewares/verify-jwt");
+const categoriesController = require("../controllers/categories-controller");
+const ROLE = require("../configs/roles-list");
+const verifyRole = require("../middlewares/verify-role");
+const verifyJWT = require("../middlewares/verify-jwt");
 
 router
 	.route("/")

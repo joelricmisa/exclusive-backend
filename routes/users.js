@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const usersController = require("../../controllers/users-controller");
-const ROLE = require("../../configs/roles-list");
-const verifyRole = require("../../middlewares/verify-role");
-const verifyJWT = require("../../middlewares/verify-jwt");
+const usersController = require("../controllers/users-controller");
+const ROLE = require("../configs/roles-list");
+const verifyRole = require("../middlewares/verify-role");
+const verifyJWT = require("../middlewares/verify-jwt");
 
 router.route("/current").get(verifyJWT, usersController.getCurrentUser);
 
