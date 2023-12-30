@@ -90,7 +90,7 @@ const handleNewUser = async (req, res) => {
 
 const updateUserById = async (req, res) => {
 	try {
-		const { name, email, wishlistIds } = req.body;
+		const { name, email } = req.body;
 		const userId = req.params.id;
 
 		if (!userId) return res.status(400).json({ message: "User id is required" });
@@ -101,20 +101,7 @@ const updateUserById = async (req, res) => {
 
 		if (!name || !email) return res.status(400).json({ message: "Please fill up all inputs" });
 
-		if (wishlistIds) {
-			const objectWishlistIds = wishlistIds.map((id) => new mongoose.Types.ObjectId(id));
-
-			const products = await Product.find({ _id: { $in: objectWishlistIds } }).exec();
-
-			const wishlistIdsToAdd = products.map((product) => product._id);
-
-			await User.updateOne({ _id: userId }, { ...req.body });
-
-			await User.updateOne({ _id: userId }, { $addToSet: { wishlist: { $each: wishlistIdsToAdd } } });
-			//
-		} else {
-			await User.updateOne({ _id: userId }, { ...req.body });
-		}
+		await User.updateOne({ _id: userId }, { ...req.body });
 
 		// for roles {...req.body, roles: JSON.parse(roles)}
 
@@ -128,27 +115,6 @@ const updateUserById = async (req, res) => {
 		});
 	} catch (err) {
 		res.status(500).json({ error: err.message });
-	}
-};
-
-const removeProductFromWishlist = async (req, res) => {
-	try {
-		const userId = req.params.id;
-		const productId = req.params.productId;
-
-		await User.updateOne({ _id: userId }, { $pull: { wishlist: productId } }, { new: true });
-
-		const user = await User.findById(userId).populate("wishlist").exec();
-
-		res.status(200).json({
-			message: `Product removed from wishlist successfully`,
-			status: "ok",
-			status_code: 200,
-			data: user,
-		});
-	} catch (err) {
-		console.log(err);
-		return res.status(500).json({ error: err.message });
 	}
 };
 
@@ -242,6 +208,70 @@ const removeCartItem = async (req, res) => {
 	}
 };
 
+const updateWishlist = async (req, res) => {
+	try {
+		const userId = req.params.id;
+		const { product_id } = req.body;
+
+		if (!product_id) {
+			return res.status(400).json({ error: "Product ID is required" });
+		}
+
+		const user = await User.findById(userId);
+
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
+
+		const product = await Product.findById(product_id);
+
+		if (!product) {
+			return res.status(404).json({ error: "Product not found" });
+		}
+
+		const existingCartItem = user.wishlist.find((item) => item._id?.equals(product_id));
+
+		if (!existingCartItem) {
+			user.wishlist.push({
+				_id: product_id,
+			});
+		}
+
+		await user.save().then((data) => data.populate("wishlist"));
+
+		res.json(user);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+};
+
+const removeWishlistItem = async (req, res) => {
+	try {
+		const userId = req.params.id;
+		const { product_id } = req.body;
+
+		if (!product_id) {
+			return res.status(400).json({ error: "Product ID is required" });
+		}
+
+		const user = await User.findById(userId);
+
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
+
+		user.wishlist = user.wishlist.filter((item) => !item._id.equals(product_id));
+
+		await user.save().then((data) => data.populate("wishlist"));
+
+		res.json(user);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+};
+
 module.exports = {
 	getAllUsers,
 	getUserById,
@@ -249,7 +279,9 @@ module.exports = {
 	handleNewUser,
 	updateUserById,
 	deleteUserById,
-	removeProductFromWishlist,
+
 	updateCart,
 	removeCartItem,
+	updateWishlist,
+	removeWishlistItem,
 };

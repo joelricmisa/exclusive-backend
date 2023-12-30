@@ -18,8 +18,7 @@ router
 router.patch("/:id/cart", verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.updateCart);
 router.patch("/:id/cart/remove", verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.removeCartItem);
 
-router
-	.route("/:id/remove-from-wishlist/:productId")
-	.put(verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.removeProductFromWishlist);
+router.patch("/:id/wishlist", verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.updateWishlist);
+router.patch("/:id/wishlist/remove", verifyJWT, verifyRole(ROLE.user, ROLE.admin), usersController.removeWishlistItem);
 
 module.exports = router;
