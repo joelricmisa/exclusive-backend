@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const verifyJWT = async (req, res, next) => {
 	try {
-		const BearerToken = req.headers["authorization"] || req.headers.authorization;
+		const BearerToken = req.headers["authorization"];
 		// console.log(BearerToken);
 		if (!BearerToken) {
 			return res.status(401).json({ error: "Unauthorized" });
