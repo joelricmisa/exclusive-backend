@@ -7,7 +7,7 @@ const verifyJWT = async (req, res, next) => {
 		if (!BearerToken) {
 			return res.status(401).json({ error: "Unauthorized" });
 		}
-		const token = BearerToken.replace(/^Bearer\s$/, "");
+		const token = BearerToken.replace(/^Bearer\s/, "");
 
 		jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
 			if (err) return res.sendStatus(403);
