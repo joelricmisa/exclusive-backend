@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const errorHandler = require("../utils/error-handler");
 
 const verifyJWT = async (req, res, next) => {
 	try {
@@ -22,7 +23,7 @@ const verifyJWT = async (req, res, next) => {
 			next();
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 

@@ -1,4 +1,5 @@
 const Category = require("../models/Category");
+const errorHandler = require("../utils/error-handler");
 
 const getAllCategories = async (req, res) => {
 	try {
@@ -15,7 +16,7 @@ const getAllCategories = async (req, res) => {
 			data: categories,
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -36,7 +37,7 @@ const getCategoryById = async (req, res) => {
 			data: category,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -60,7 +61,7 @@ const handleNewCategory = async (req, res) => {
 			data: category,
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -85,7 +86,7 @@ const updateCategoryById = async (req, res) => {
 			data: result,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -105,7 +106,7 @@ const deleteCategoryById = async (req, res) => {
 			data: result,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 

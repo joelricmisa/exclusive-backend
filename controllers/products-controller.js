@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const Category = require("../models/Category");
+const errorHandler = require("../utils/error-handler");
 
 const getAllProducts = async (req, res) => {
 	try {
@@ -14,7 +15,7 @@ const getAllProducts = async (req, res) => {
 			data: products,
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 const getProductById = async (req, res) => {
@@ -32,7 +33,7 @@ const getProductById = async (req, res) => {
 			data: product,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 const handleNewProduct = async (req, res) => {
@@ -73,7 +74,7 @@ const handleNewProduct = async (req, res) => {
 			data: product,
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -122,7 +123,7 @@ const updateProductById = async (req, res) => {
 			data: result,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -143,7 +144,7 @@ const deleteProductById = async (req, res) => {
 			data: result,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 

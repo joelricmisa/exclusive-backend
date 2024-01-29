@@ -9,7 +9,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const corsOptions = require("./configs/cors-options");
 const credentials = require("./middlewares/credentials");
-const handleError = require("./middlewares/error-handler");
+const handleError = require("./middlewares/error-handler-middleware");
 const routes = require("./routes");
 
 connectDB();

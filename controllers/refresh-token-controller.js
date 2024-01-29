@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const errorHandler = require("../utils/error-handler");
 
 const handleRefreshToken = async (req, res) => {
 	try {
@@ -34,7 +35,7 @@ const handleRefreshToken = async (req, res) => {
 			});
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 

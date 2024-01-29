@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const errorHandler = require("../utils/error-handler");
 
 const handleChangePassword = async (req, res) => {
 	try {
@@ -24,7 +25,7 @@ const handleChangePassword = async (req, res) => {
 
 		res.status(200).json({ message: "Password updated successfully", status: "ok", status_code: 200, user: user.name });
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -64,7 +65,7 @@ const handleForgotPassword = async (req, res) => {
 
 		res.status(200).json({ message: "Email for reset password sent successfully", status: "ok", status_code: 200, user: user.name });
 	} catch (err) {
-		res.status(500).json({ message: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -86,7 +87,7 @@ const handleResetPassword = async (req, res) => {
 
 		res.status(200).json({ message: "Password reset successfully", status: "ok", status_code: 200, user: user.name });
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 

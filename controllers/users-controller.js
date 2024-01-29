@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const Product = require("../models/Product");
 const mongoose = require("mongoose");
+const errorHandler = require("../utils/error-handler");
 
 const getAllUsers = async (req, res) => {
 	try {
@@ -16,7 +17,7 @@ const getAllUsers = async (req, res) => {
 			data: users,
 		});
 	} catch (err) {
-		res.status(500).json({ err: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -35,7 +36,7 @@ const getUserById = async (req, res) => {
 			data: user,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -54,7 +55,7 @@ const getCurrentUser = async (req, res) => {
 			data: user,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -84,7 +85,7 @@ const handleNewUser = async (req, res) => {
 			data: user,
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -114,7 +115,7 @@ const updateUserById = async (req, res) => {
 			data: result,
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -135,7 +136,7 @@ const deleteUserById = async (req, res) => {
 			data: result,
 		});
 	} catch (err) {
-		res.status(400).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 
@@ -176,9 +177,8 @@ const updateCart = async (req, res) => {
 		await user.save().then((data) => data.populate({ path: "cart.product_id" }));
 
 		res.json(user);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
+	} catch (err) {
+		errorHandler(req, err);
 	}
 };
 
@@ -202,9 +202,8 @@ const removeCartItem = async (req, res) => {
 		await user.save().then((data) => data.populate({ path: "cart.product_id" }));
 
 		res.json(user);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
+	} catch (err) {
+		errorHandler(req, err);
 	}
 };
 
@@ -240,9 +239,8 @@ const updateWishlist = async (req, res) => {
 		await user.save().then((data) => data.populate("wishlist"));
 
 		res.json(user);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
+	} catch (err) {
+		errorHandler(req, err);
 	}
 };
 
@@ -266,9 +264,8 @@ const removeWishlistItem = async (req, res) => {
 		await user.save().then((data) => data.populate("wishlist"));
 
 		res.json(user);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
+	} catch (err) {
+		errorHandler(req, err);
 	}
 };
 

@@ -1,3 +1,5 @@
+const errorHandler = require("../utils/error-handler");
+
 const verifyRole = (...allowedRoles) => {
 	try {
 		return (req, res, next) => {
@@ -9,7 +11,7 @@ const verifyRole = (...allowedRoles) => {
 			next();
 		};
 	} catch (err) {
-		console.log(err.message);
+		errorHandler(req, err);
 	}
 };
 

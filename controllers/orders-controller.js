@@ -1,4 +1,5 @@
 const Order = require("../models/Order");
+const errorHandler = require("../utils/error-handler");
 
 const createOrder = async (req, res) => {
 	try {
@@ -16,9 +17,8 @@ const createOrder = async (req, res) => {
 		await newOrder.save();
 
 		res.status(201).json(newOrder);
-	} catch (error) {
-		console.error("Error in createOrder:", error.stack);
-		res.status(500).json({ error: "Internal Server Error" });
+	} catch (err) {
+		errorHandler(req, err);
 	}
 };
 
@@ -26,9 +26,8 @@ const getAllOrders = async (req, res) => {
 	try {
 		const orders = await Order.find().exec();
 		res.json(orders);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
+	} catch (err) {
+		errorHandler(req, err);
 	}
 };
 
@@ -42,9 +41,8 @@ const getOrderById = async (req, res) => {
 		}
 
 		res.json(order);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
+	} catch (err) {
+		errorHandler(req, err);
 	}
 };
 
@@ -58,9 +56,8 @@ const getOrderByUserId = async (req, res) => {
 		}
 
 		res.json(user);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
+	} catch (err) {
+		errorHandler(req, err);
 	}
 };
 
@@ -76,9 +73,8 @@ const updateOrderStatus = async (req, res) => {
 		}
 
 		res.json(updatedOrder);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
+	} catch (err) {
+		errorHandler(req, err);
 	}
 };
 

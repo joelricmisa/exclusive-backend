@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const errorHandler = require("../utils/error-handler");
 
 const handleNewUser = async (req, res) => {
 	try {
@@ -27,7 +28,7 @@ const handleNewUser = async (req, res) => {
 			data: result,
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 

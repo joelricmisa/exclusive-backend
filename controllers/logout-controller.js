@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const errorHandler = require("../utils/error-handler");
 
 const handleLogout = async (req, res) => {
 	try {
@@ -29,7 +30,7 @@ const handleLogout = async (req, res) => {
 			user: user.name,
 		});
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		errorHandler(req, err);
 	}
 };
 module.exports = { handleLogout };
