@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const Product = require("../models/Product");
 const mongoose = require("mongoose");
 const errorHandler = require("../utils/error-handler");
+const resErr = require("../utils/res-error");
 
 const getAllUsers = async (req, res) => {
 	try {
@@ -24,10 +25,10 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
 	try {
 		const userId = req.params.id;
-		if (!userId) return res.status(400).json({ message: "User id is required!" });
+		if (!userId) return resErr(res, 400, "User id is required!");
 
 		const user = await User.findById(userId, "-password -__v").populate("cart").exec();
-		if (!user) return res.sendStatus(404);
+		if (!user) return resErr(res, 404, "User is not found");
 
 		res.status(200).json({
 			message: "User displayed successfully",
@@ -43,10 +44,10 @@ const getUserById = async (req, res) => {
 const getCurrentUser = async (req, res) => {
 	try {
 		const id = req.id;
-		if (!id) return res.sendStatus(401);
+		if (!id) return resErr(res, 401, "Invalid credentials");
 
 		const user = await User.findById(id, "-password -__v").populate({ path: "cart.product_id" }).populate("wishlist").exec();
-		if (!user) return res.sendStatus(401);
+		if (!user) return resErr(res, 403, "Invalid credentials");
 
 		res.status(200).json({
 			message: "Get current user successfully",
@@ -62,10 +63,10 @@ const getCurrentUser = async (req, res) => {
 const handleNewUser = async (req, res) => {
 	try {
 		const { name, email, password, roles } = req.body;
-		if (!name || !email || !password) return res.status(400).json({ message: "Please fill up all inputs." });
+		if (!name || !email || !password) return resErr(res, 400, "Please fill up all inputs.");
 
 		const duplicate = await User.findOne({ email }).exec();
-		if (duplicate) return res.status(409).json({ message: "This email is already used!" });
+		if (duplicate) return resErr(res, 409, "This email is already used!");
 
 		const hashedPwd = await bcrypt.hash(password, 10);
 
@@ -94,13 +95,13 @@ const updateUserById = async (req, res) => {
 		const { name, email } = req.body;
 		const userId = req.params.id;
 
-		if (!userId) return res.status(400).json({ message: "User id is required" });
+		if (!userId) return resErr(res, 400, "User id is required");
 
 		const user = await User.findById(userId).exec();
 
-		if (!user) return res.status(404).json({ message: "This user is not found" });
+		if (!user) return resErr(res, 404, "This user is not found");
 
-		if (!name || !email) return res.status(400).json({ message: "Please fill up all inputs" });
+		if (!name || !email) return resErr(res, 400, "Please fill up all inputs");
 
 		await User.updateOne({ _id: userId }, { ...req.body });
 
@@ -122,10 +123,10 @@ const updateUserById = async (req, res) => {
 const deleteUserById = async (req, res) => {
 	try {
 		const userId = req.params.id;
-		if (!userId) return res.status(400).json({ message: "User id is required" });
+		if (!userId) return resErr(res, 400, "User id is required");
 
 		const user = await User.findById(userId).exec();
-		if (!user) return res.status(404).json({ message: "User is not found" });
+		if (!user) return resErr(res, 404, "User is not found");
 
 		const result = await user.deleteOne();
 
@@ -146,19 +147,19 @@ const updateCart = async (req, res) => {
 		const { product_id, quantity } = req.body;
 
 		if (!product_id || !quantity) {
-			return res.status(400).json({ error: "Product ID and quantity are required" });
+			return resErr(res, 400, "Product ID and quantity are required");
 		}
 
 		const user = await User.findById(userId);
 
 		if (!user) {
-			return res.status(404).json({ error: "User not found" });
+			return resErr(res, 404, "User not found");
 		}
 
 		const product = await Product.findById(product_id);
 
 		if (!product) {
-			return res.status(404).json({ error: "Product not found" });
+			return resErr(res, 404, "Product not found");
 		}
 
 		const existingCartItem = user.cart.find((item) => item.product_id?.equals(product_id));
@@ -188,13 +189,13 @@ const removeCartItem = async (req, res) => {
 		const { product_id } = req.body;
 
 		if (!product_id) {
-			return res.status(400).json({ error: "Product ID is required" });
+			return resErr(res, 400, "Product ID is required");
 		}
 
 		const user = await User.findById(userId);
 
 		if (!user) {
-			return res.status(404).json({ error: "User not found" });
+			return resErr(res, 404, "User not found");
 		}
 
 		user.cart = user.cart.filter((item) => !item.product_id.equals(product_id));
@@ -213,19 +214,19 @@ const updateWishlist = async (req, res) => {
 		const { product_id } = req.body;
 
 		if (!product_id) {
-			return res.status(400).json({ error: "Product ID is required" });
+			return resErr(res, 400, "Product ID is required");
 		}
 
 		const user = await User.findById(userId);
 
 		if (!user) {
-			return res.status(404).json({ error: "User not found" });
+			return resErr(res, 404, "User not found");
 		}
 
 		const product = await Product.findById(product_id);
 
 		if (!product) {
-			return res.status(404).json({ error: "Product not found" });
+			return resErr(res, 404, "Product not found");
 		}
 
 		const existingCartItem = user.wishlist.find((item) => item._id?.equals(product_id));
@@ -250,13 +251,13 @@ const removeWishlistItem = async (req, res) => {
 		const { product_id } = req.body;
 
 		if (!product_id) {
-			return res.status(400).json({ error: "Product ID is required" });
+			return resErr(res, 400, "Product ID is required");
 		}
 
 		const user = await User.findById(userId);
 
 		if (!user) {
-			return res.status(404).json({ error: "User not found" });
+			return resErr(res, 404, "User not found");
 		}
 
 		user.wishlist = user.wishlist.filter((item) => !item._id.equals(product_id));

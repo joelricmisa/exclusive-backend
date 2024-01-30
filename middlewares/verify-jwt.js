@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const errorHandler = require("../utils/error-handler");
+const resErr = require("../utils/res-error");
 
 const verifyJWT = async (req, res, next) => {
 	try {
@@ -10,11 +11,11 @@ const verifyJWT = async (req, res, next) => {
 		// const token = BearerToken.replace(/^Bearer\s/, "");
 
 		const authHeader = req.headers.authorization;
-		if (!authHeader.startsWith("Bearer ")) return res.sendStatus(401);
+		if (!authHeader.startsWith("Bearer ")) return resErr(res, 401, "Invalid Credentials");
 		const token = authHeader.split(" ")[1];
 
 		jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
-			if (err) return res.sendStatus(403);
+			if (err) return resErr(res, 403, "Invalid Credentials");
 			req.user = decoded.userInfo.name;
 			req.roles = decoded.userInfo.role;
 			req.id = decoded.userInfo.id;

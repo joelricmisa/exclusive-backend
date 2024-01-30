@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const errorHandler = require("../utils/error-handler");
+const resErr = require("../utils/res-error");
 
 const createOrder = async (req, res) => {
 	try {
@@ -37,7 +38,7 @@ const getOrderById = async (req, res) => {
 		const order = await Order.findById(orderId).populate("user_id").exec();
 
 		if (!order) {
-			return res.status(404).json({ error: "Order not found" });
+			return resErr(res, 404, "Order not found");
 		}
 
 		res.json(order);
@@ -52,7 +53,7 @@ const getOrderByUserId = async (req, res) => {
 		const user = await Order.find({ user_id: userId }).populate({ path: "products.product_id" }).exec();
 
 		if (!user) {
-			return res.status(404).json({ error: "User not found" });
+			return resErr(res, 404, "User not found");
 		}
 
 		res.json(user);
@@ -69,7 +70,7 @@ const updateOrderStatus = async (req, res) => {
 		const updatedOrder = await Order.findByIdAndUpdate(orderId, { status }, { new: true });
 
 		if (!updatedOrder) {
-			return res.status(404).json({ error: "Order not found" });
+			return resErr(res, 404, "Order not found");
 		}
 
 		res.json(updatedOrder);

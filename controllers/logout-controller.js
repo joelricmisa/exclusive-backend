@@ -4,14 +4,26 @@ const errorHandler = require("../utils/error-handler");
 const handleLogout = async (req, res) => {
 	try {
 		const cookies = req.cookies;
-		if (!cookies.jwt) return res.sendStatus(204);
+		if (!cookies.jwt)
+			return res.status(204).json({
+				status: "success",
+				code: "204",
+				message: "No Content",
+				details: "Request successful, but no jwt cookie available",
+			});
 
 		const refreshToken = cookies.jwt;
 
 		const user = await User.findOne({ refreshToken }).exec();
+
 		if (!user) {
 			res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "None" });
-			return res.status(204).json({ message: "No Content" });
+			return res.status(204).json({
+				status: "success",
+				code: "204",
+				message: "No Content",
+				details: "Request successful, but no refresh token available",
+			});
 		}
 
 		user.refreshToken = " ";

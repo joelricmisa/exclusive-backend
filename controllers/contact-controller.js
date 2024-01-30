@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const errorHandler = require("../utils/error-handler");
+const resErr = require("../utils/res-error");
 
 const transporter = nodemailer.createTransport({
 	host: process.env.SMTP_HOST,
@@ -14,7 +15,7 @@ const handleMessage = async (req, res) => {
 	try {
 		const { name, email, message, phone } = req.body;
 
-		if (!email || !name || !message || !phone) return res.status(400).json({ message: "Pleass fill up all input fields" });
+		if (!email || !name || !message || !phone) return resErr(res, 400, "Pleass fill up all input fields");
 
 		const mailOptions = {
 			from: email,

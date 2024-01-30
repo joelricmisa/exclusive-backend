@@ -1,12 +1,19 @@
 const Category = require("../models/Category");
 const errorHandler = require("../utils/error-handler");
+const resErr = require("../utils/res-error");
 
 const getAllCategories = async (req, res) => {
 	try {
 		const categories = await Category.find({}, "name products")
 			.populate("products", "name image price discount quantity rating rate_count")
 			.exec();
-		if (!categories) return res.sendStatus(204);
+		if (!categories)
+			return res.status(204).json({
+				status: "success",
+				code: "204",
+				message: "NoContent",
+				details: "Request successful, but no content available",
+			});
 
 		res.status(200).json({
 			message: "Categories displayed successfully",
@@ -23,12 +30,13 @@ const getAllCategories = async (req, res) => {
 const getCategoryById = async (req, res) => {
 	try {
 		const categoryId = req.params.id;
-		if (!categoryId) return res.status(400).json({ message: "Category id is required" });
+		if (!categoryId) return resErr(res, 400, "Category id is required in url parameter");
 
 		const category = await Category.findById(categoryId, "name products")
 			.populate("products", "name image price discount quantity rating rate_count")
 			.exec();
-		if (!category) return res.status(404).json({ message: "Category is not found" });
+
+		if (!category) return resErr(res, 404, "Category is not found");
 
 		res.status(200).json({
 			message: "Category displayed successfully",
@@ -45,10 +53,11 @@ const handleNewCategory = async (req, res) => {
 	try {
 		const { name } = req.body;
 
-		if (!name) return res.status(400).json({ message: "Name is required" });
+		if (!name) return resErr(res, 400, "Name is required");
 
 		const duplicate = await Category.findOne({ name }).exec();
-		if (duplicate) return res.status(409).json({ message: "This name is already used" });
+
+		if (duplicate) return resErr(res, 409, "This name is already used");
 
 		const category = await Category.create({
 			name,
@@ -70,12 +79,13 @@ const updateCategoryById = async (req, res) => {
 		const bodyData = req.body;
 		const categoryId = req.params.id;
 
-		if (!categoryId) return res.status(400).json({ message: "Category id is required" });
-		if (!bodyData.name) return res.status(400).json({ message: "Name is required" });
+		if (!categoryId) return resErr(res, 400, "Category id is required");
+
+		if (!bodyData.name) return resErr(res, 400, "Name is required");
 
 		const category = await Category.updateOne({ _id: categoryId }, { ...bodyData }).exec();
 
-		if (!category) return res.status(404).json({ message: "Category is not found" });
+		if (!category) return resErr(res, 404, "Category is not found");
 
 		const result = await Category.findById(categoryId).exec();
 
@@ -93,10 +103,11 @@ const updateCategoryById = async (req, res) => {
 const deleteCategoryById = async (req, res) => {
 	try {
 		const categoryId = req.params.id;
-		if (!categoryId) return res.status(400).json({ message: "Category id is required" });
+		if (!categoryId) return resErr(res, 400, "Category id is required");
 
 		const category = await Category.findById(categoryId).exec();
-		if (!category) return res.status(404).json({ message: "This category is not found" });
+
+		if (!category) return resErr(res, 404, "Category is not found");
 
 		const result = await category.deleteOne();
 		res.status(200).json({

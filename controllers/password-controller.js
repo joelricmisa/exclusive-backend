@@ -3,19 +3,20 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const errorHandler = require("../utils/error-handler");
+const resErr = require("../utils/res-error");
 
 const handleChangePassword = async (req, res) => {
 	try {
 		const { currentPassword, newPassword } = req.body;
 
-		if (!currentPassword || !newPassword) return res.status(400).json({ message: "Please fill all the fields" });
+		if (!currentPassword || !newPassword) return resErr(res, 400, "Please fill all the fields");
 
 		const user = await User.findById(req.id).exec();
 
 		const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
 		if (!isPasswordValid) {
-			return res.status(401).json({ message: "Invalid current password" });
+			return resErr(res, 401, "Invalid current password");
 		}
 
 		const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -42,11 +43,11 @@ const handleForgotPassword = async (req, res) => {
 	try {
 		const { email } = req.body;
 
-		if (!email) return res.status(400).json({ message: "Email is required" });
+		if (!email) return resErr(res, 400, "Email is required");
 
 		const user = await User.findOne({ email }).exec();
 
-		if (!user) return res.status(404).json({ message: "Email is not found!" });
+		if (!user) resErr(res, 404, "Email is not found!");
 
 		const resetToken = await jwt.sign({ id: user._id }, process.env.RESET_TOKEN, { expiresIn: "1h" });
 
@@ -78,7 +79,7 @@ const handleResetPassword = async (req, res) => {
 		const decoded = jwt.verify(resetToken, process.env.RESET_TOKEN);
 		const user = await User.findById(decoded.id);
 
-		if (!user) return res.status(404).json({ message: "User is not found" });
+		if (!user) return resErr(res, 404, "User is not found");
 
 		const hashedPassword = await bcrypt.hash(newPassword, 10);
 

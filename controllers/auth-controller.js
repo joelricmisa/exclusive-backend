@@ -2,26 +2,15 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const errorHandler = require("../utils/error-handler");
+const resErr = require("../utils/res-error");
 
 const handleLogin = async (req, res) => {
 	try {
 		const { email, password } = req.body;
-		if (!email || !password)
-			return res.status(400).json({
-				error: "BadRequest",
-				code: "400",
-				message: "Invalid request payload",
-				details: "Email and Password are required",
-			});
+		if (!email || !password) return resErr(res, 400, "Email and Password are required");
 
 		const user = await User.findOne({ email }).exec();
-		if (!user)
-			return res.status(401).json({
-				error: "NotFound",
-				code: "404",
-				message: "Resource not found",
-				details: "Invalid Credentials",
-			});
+		if (!user) return resErr(res, 401, "Resource not found");
 
 		const match = await bcrypt.compare(password, user.password);
 
@@ -66,12 +55,7 @@ const handleLogin = async (req, res) => {
 				role,
 			});
 		} else {
-			res.status(401).json({
-				error: "Unauthorized",
-				code: "401",
-				message: "Authentication failed",
-				details: "Invalid Credentials, please make sure you have a valid email and a correct password for your account!",
-			});
+			return resErr(res, 401, "Invalid Credentials, please make sure you have a valid email and a correct password for your account!");
 		}
 	} catch (err) {
 		errorHandler(req, err);

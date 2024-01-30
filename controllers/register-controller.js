@@ -1,15 +1,16 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const errorHandler = require("../utils/error-handler");
+const resErr = require("../utils/res-error");
 
 const handleNewUser = async (req, res) => {
 	try {
 		const { name, email, password } = req.body;
-		if (!name || !email || !password) return res.status(400).json({ message: "Name, Email, and Password are required!" });
+		if (!name || !email || !password) return resErr(res, 400, "Name, Email, and Password are required!");
 
 		const duplicate = await User.findOne({ email }).exec();
 
-		if (duplicate) return res.status(409).json({ message: "This email is already used!" });
+		if (duplicate) return resErr(res, 409, "This email is already used!");
 
 		const hashedPwd = await bcrypt.hash(password, 10);
 

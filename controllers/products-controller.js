@@ -1,6 +1,7 @@
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 const errorHandler = require("../utils/error-handler");
+const resErr = require("../utils/res-error");
 
 const getAllProducts = async (req, res) => {
 	try {
@@ -21,10 +22,11 @@ const getAllProducts = async (req, res) => {
 const getProductById = async (req, res) => {
 	try {
 		const productId = req.params.id;
-		if (!productId) return res.status(400).json({ message: "Product id is required" });
+		if (!productId) return resErr(res, 400, "Product id is required");
 
 		const product = await Product.findById(productId, "-__v").populate("categories", "name").exec();
-		if (!product) return res.status(404).json({ message: "This product id is not found" });
+
+		if (!product) return resErr(res, 404, "This product id is not found");
 
 		res.status(200).json({
 			message: "Product displayed successfully",
@@ -40,11 +42,11 @@ const handleNewProduct = async (req, res) => {
 	try {
 		const { name, price, quantity, categoryName } = req.body;
 
-		if (!name || !price || !quantity) return res.status(400).json({ message: "Please fill up all inputs" });
+		if (!name || !price || !quantity) return resErr(res, 400, "Please fill up all inputs");
 
 		const duplicate = await Product.findOne({ name }).exec();
 
-		if (duplicate) return res.status(409).json({ message: "This product name is already used!" });
+		if (duplicate) return resErr(res, 409, "This product name is already used!");
 
 		let product;
 		const filePath = req.file?.path;
@@ -83,12 +85,13 @@ const updateProductById = async (req, res) => {
 		const productId = req.params.id;
 		const { name, price, quantity, categoryName } = req.body;
 
-		if (!productId) return res.status(400).json({ message: "Product id is required" });
-		if (!name || !price || !quantity) return res.status(400).json({ message: "Please fill up all inputs" });
+		if (!productId) return resErr(res, 400, "Product id is required");
+
+		if (!name || !price || !quantity) return resErr(res, 400, "Please fill up all inputs");
 
 		const product = await Product.findById(productId).exec();
 
-		if (!product) return res.status(404).json({ message: "This product id is not found " });
+		if (!product) return resErr(res, 404, "This product id is not found");
 
 		const category = await Category.findOne({ name: categoryName }).exec();
 
@@ -130,10 +133,10 @@ const updateProductById = async (req, res) => {
 const deleteProductById = async (req, res) => {
 	try {
 		const productId = req.params.id;
-		if (!productId) return res.status(400).json({ message: "Product id is required" });
+		if (!productId) return resErr(res, 400, "Product id is required");
 
 		const product = await Product.findById(productId).exec();
-		if (!product) return res.status(404).json({ message: "This product is not found" });
+		if (!product) return resErr(res, 404, "This product is not found");
 
 		const result = await product.deleteOne();
 
