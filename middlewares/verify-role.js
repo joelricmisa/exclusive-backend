@@ -8,7 +8,7 @@ const verifyRole = (...allowedRoles) => {
 			const rolesArray = [...allowedRoles];
 			const result = rolesArray.map((role) => req?.roles.includes(role)).find((val) => val === true);
 			// console.log(`Authorized:`, result);
-			if (!result) return resErr(res, 401, "you don't have access for this");
+			if (!result) return resErr(res, 403, "You're not allowed to access this route.");
 			next();
 		};
 	} catch (err) {

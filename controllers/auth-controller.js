@@ -10,7 +10,7 @@ const handleLogin = async (req, res) => {
 		if (!email || !password) return resErr(res, 400, "Email and Password are required");
 
 		const user = await User.findOne({ email }).exec();
-		if (!user) return resErr(res, 401, "Resource not found");
+		if (!user) return resErr(res, 401, "Invalid Credentials");
 
 		const match = await bcrypt.compare(password, user.password);
 
