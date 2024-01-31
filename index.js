@@ -25,7 +25,7 @@ app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/", routes);
 
 app.all("*", (req, res, next) => {
-	const err = new Error("404 Not Found");
+	const err = new Error("Make sure you have the correct method and path");
 	err.status = 404;
 	next(err);
 });
