@@ -1,5 +1,5 @@
-const errorHandler = (req, err) => {
-	console.error(`Error in ${req.method} ${req.path} : `, err.stack);
+const errorHandler = (req, res, err) => {
+	console.error(`Error in ${req.method} ${req.originalUrl} : `, err.stack);
 
 	res.status(500).json({
 		error: "InternalError",

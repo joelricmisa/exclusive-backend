@@ -29,7 +29,7 @@ const handleMessage = async (req, res) => {
 
 		resSuccess(res, 200, "Message sent successfully!", email);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

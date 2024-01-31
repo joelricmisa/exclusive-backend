@@ -51,7 +51,7 @@ const handleLogin = async (req, res) => {
 			return resErr(res, 401, "Invalid Credentials, please make sure you have a valid email and a correct password for your account!");
 		}
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

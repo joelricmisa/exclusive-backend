@@ -34,7 +34,7 @@ const handleRefreshToken = async (req, res) => {
 			});
 		});
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

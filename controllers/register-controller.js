@@ -24,7 +24,7 @@ const handleNewUser = async (req, res) => {
 
 		resSuccess(res, 201, `User ${name} is created!`, result);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

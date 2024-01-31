@@ -12,7 +12,7 @@ const verifyRole = (...allowedRoles) => {
 			next();
 		};
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

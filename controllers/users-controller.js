@@ -16,7 +16,7 @@ const getAllUsers = async (req, res) => {
 			users,
 		});
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -30,7 +30,7 @@ const getUserById = async (req, res) => {
 
 		resSuccess(res, 200, "User displayed successfully", user);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -44,7 +44,7 @@ const getCurrentUser = async (req, res) => {
 
 		resSuccess(res, 200, "Get current user successfully", user);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -69,7 +69,7 @@ const handleNewUser = async (req, res) => {
 
 		resSuccess(res, 201, `User ${name} is created!`, user);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -94,7 +94,7 @@ const updateUserById = async (req, res) => {
 
 		resSuccess(res, 200, `User ${name} is updated sucessfully`, result);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -110,7 +110,7 @@ const deleteUserById = async (req, res) => {
 
 		resSuccess(res, 200, `User ${user.name} is deleted sucessfully`, result);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -152,7 +152,7 @@ const updateCart = async (req, res) => {
 
 		resSuccess(res, 200, null, user);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -177,7 +177,7 @@ const removeCartItem = async (req, res) => {
 
 		resSuccess(res, 200, null, user);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -214,7 +214,7 @@ const updateWishlist = async (req, res) => {
 
 		resSuccess(res, 200, null, user);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -239,7 +239,7 @@ const removeWishlistItem = async (req, res) => {
 
 		resSuccess(res, 200, null, user);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

@@ -14,7 +14,7 @@ const getAllProducts = async (req, res) => {
 			products,
 		});
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 const getProductById = async (req, res) => {
@@ -28,7 +28,7 @@ const getProductById = async (req, res) => {
 
 		resSuccess(res, 200, "Product displayed successfully", product);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 const handleNewProduct = async (req, res) => {
@@ -64,7 +64,7 @@ const handleNewProduct = async (req, res) => {
 
 		resSuccess(res, 201, `Product ${name} is created!`, product);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -109,7 +109,7 @@ const updateProductById = async (req, res) => {
 
 		resSuccess(res, 200, `${result.name} product is updated successfully`, result);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -125,7 +125,7 @@ const deleteProductById = async (req, res) => {
 
 		resSuccess(res, 200, `${result.name} product is deleted successfully`, result);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

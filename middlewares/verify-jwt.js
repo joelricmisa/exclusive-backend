@@ -24,7 +24,7 @@ const verifyJWT = async (req, res, next) => {
 			next();
 		});
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

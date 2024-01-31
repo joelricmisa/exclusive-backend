@@ -20,7 +20,7 @@ const createOrder = async (req, res) => {
 
 		resSuccess(res, 201, null, newOrder);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -29,7 +29,7 @@ const getAllOrders = async (req, res) => {
 		const orders = await Order.find().exec();
 		resSuccess(res, 200, null, orders);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -44,7 +44,7 @@ const getOrderById = async (req, res) => {
 
 		resSuccess(res, 200, null, order);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -59,7 +59,7 @@ const getOrderByUserId = async (req, res) => {
 
 		resSuccess(res, 200, null, user);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -76,7 +76,7 @@ const updateOrderStatus = async (req, res) => {
 
 		resSuccess(res, 200, null, updatedOrder);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

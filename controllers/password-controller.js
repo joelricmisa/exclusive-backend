@@ -27,7 +27,7 @@ const handleChangePassword = async (req, res) => {
 
 		resSuccess(res, 200, "Password updated successfully", user.name);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -67,7 +67,7 @@ const handleForgotPassword = async (req, res) => {
 
 		resSuccess(res, 200, "Email for reset password sent successfully", user.name);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -89,7 +89,7 @@ const handleResetPassword = async (req, res) => {
 
 		resSuccess(res, 200, "Password reset successfully", user.name);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

@@ -18,7 +18,7 @@ const getAllCategories = async (req, res) => {
 
 		resSuccess(res, 200, "Categories displayed successfully", { categoriesCount: categories.length, categories });
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -35,7 +35,7 @@ const getCategoryById = async (req, res) => {
 
 		resSuccess(res, 200, "Category displayed successfully", category);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -55,7 +55,7 @@ const handleNewCategory = async (req, res) => {
 
 		resSuccess(res, 201, `${name} category is created!`, category);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -76,7 +76,7 @@ const updateCategoryById = async (req, res) => {
 
 		resSuccess(res, 200, `${result.name} category is updated successfully`, result);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 
@@ -93,7 +93,7 @@ const deleteCategoryById = async (req, res) => {
 
 		resSuccess(res, 200, `${result.name} category is deleted successfully`, result);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 

@@ -37,7 +37,7 @@ const handleLogout = async (req, res) => {
 
 		resSuccess(res, 200, "Logout Successfully!", user.name);
 	} catch (err) {
-		errorHandler(req, err);
+		errorHandler(req, res, err);
 	}
 };
 module.exports = { handleLogout };
