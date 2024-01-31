@@ -1,6 +1,7 @@
 const Order = require("../models/Order");
 const errorHandler = require("../utils/error-handler");
 const resErr = require("../utils/res-error");
+const resSuccess = require("../utils/res-success");
 
 const createOrder = async (req, res) => {
 	try {
@@ -17,7 +18,7 @@ const createOrder = async (req, res) => {
 
 		await newOrder.save();
 
-		res.status(201).json(newOrder);
+		resSuccess(res, 201, null, newOrder);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -26,7 +27,7 @@ const createOrder = async (req, res) => {
 const getAllOrders = async (req, res) => {
 	try {
 		const orders = await Order.find().exec();
-		res.json(orders);
+		resSuccess(res, 200, null, orders);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -41,7 +42,7 @@ const getOrderById = async (req, res) => {
 			return resErr(res, 404, "Order not found");
 		}
 
-		res.json(order);
+		resSuccess(res, 200, null, order);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -56,7 +57,7 @@ const getOrderByUserId = async (req, res) => {
 			return resErr(res, 404, "User not found");
 		}
 
-		res.json(user);
+		resSuccess(res, 200, null, user);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -73,7 +74,7 @@ const updateOrderStatus = async (req, res) => {
 			return resErr(res, 404, "Order not found");
 		}
 
-		res.json(updatedOrder);
+		resSuccess(res, 200, null, updatedOrder);
 	} catch (err) {
 		errorHandler(req, err);
 	}

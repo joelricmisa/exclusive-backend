@@ -35,12 +35,7 @@ const handleLogout = async (req, res) => {
 		req.roles = null;
 		req.id = null;
 
-		res.status(200).json({
-			message: "Logout Successfully!",
-			status: "ok",
-			status_code: 200,
-			user: user.name,
-		});
+		resSuccess(res, 200, "Logout Successfully!", user.name);
 	} catch (err) {
 		errorHandler(req, err);
 	}

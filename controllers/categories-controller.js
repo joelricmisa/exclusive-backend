@@ -1,6 +1,7 @@
 const Category = require("../models/Category");
 const errorHandler = require("../utils/error-handler");
 const resErr = require("../utils/res-error");
+const resSuccess = require("../utils/res-success");
 
 const getAllCategories = async (req, res) => {
 	try {
@@ -15,13 +16,7 @@ const getAllCategories = async (req, res) => {
 				details: "Request successful, but no content available",
 			});
 
-		res.status(200).json({
-			message: "Categories displayed successfully",
-			status: "ok",
-			status_code: 200,
-			categoriesCount: categories.length,
-			data: categories,
-		});
+		resSuccess(res, 200, "Categories displayed successfully", { categoriesCount: categories.length, categories });
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -38,12 +33,7 @@ const getCategoryById = async (req, res) => {
 
 		if (!category) return resErr(res, 404, "Category is not found");
 
-		res.status(200).json({
-			message: "Category displayed successfully",
-			status: "ok",
-			status_code: 200,
-			data: category,
-		});
+		resSuccess(res, 200, "Category displayed successfully", category);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -63,12 +53,7 @@ const handleNewCategory = async (req, res) => {
 			name,
 		});
 
-		res.status(201).json({
-			message: `${name} category is created!`,
-			status: "created",
-			status_code: 201,
-			data: category,
-		});
+		resSuccess(res, 201, `${name} category is created!`, category);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -89,12 +74,7 @@ const updateCategoryById = async (req, res) => {
 
 		const result = await Category.findById(categoryId).exec();
 
-		res.status(200).json({
-			message: `${result.name} category is updated successfully`,
-			status: "ok",
-			status_code: 200,
-			data: result,
-		});
+		resSuccess(res, 200, `${result.name} category is updated successfully`, result);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -110,12 +90,8 @@ const deleteCategoryById = async (req, res) => {
 		if (!category) return resErr(res, 404, "Category is not found");
 
 		const result = await category.deleteOne();
-		res.status(200).json({
-			message: `${result.name} category is deleted successfully`,
-			status: "ok",
-			status_code: 200,
-			data: result,
-		});
+
+		resSuccess(res, 200, `${result.name} category is deleted successfully`, result);
 	} catch (err) {
 		errorHandler(req, err);
 	}

@@ -22,12 +22,7 @@ const handleNewUser = async (req, res) => {
 
 		result.password = "Encrypted";
 
-		res.status(201).json({
-			message: `User ${name} is created!`,
-			status: "created",
-			status_code: 201,
-			data: result,
-		});
+		resSuccess(res, 201, `User ${name} is created!`, result);
 	} catch (err) {
 		errorHandler(req, err);
 	}

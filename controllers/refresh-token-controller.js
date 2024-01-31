@@ -2,6 +2,7 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const errorHandler = require("../utils/error-handler");
 const resErr = require("../utils/res-error");
+const resSuccess = require("../utils/res-success");
 
 const handleRefreshToken = async (req, res) => {
 	try {
@@ -27,10 +28,7 @@ const handleRefreshToken = async (req, res) => {
 				{ expiresIn: "1d" }
 			);
 
-			res.status(200).json({
-				message: "Displayed refresh token successfully",
-				status: "ok",
-				status_code: 200,
+			resSuccess(res, 200, "Displayed refresh token successfully", {
 				accessToken,
 				user: user.email,
 			});

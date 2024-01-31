@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const errorHandler = require("../utils/error-handler");
 const resErr = require("../utils/res-error");
+const resSuccess = require("../utils/res-success");
 
 const handleChangePassword = async (req, res) => {
 	try {
@@ -24,7 +25,7 @@ const handleChangePassword = async (req, res) => {
 		user.password = hashedPassword;
 		await user.save();
 
-		res.status(200).json({ message: "Password updated successfully", status: "ok", status_code: 200, user: user.name });
+		resSuccess(res, 200, "Password updated successfully", user.name);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -64,7 +65,7 @@ const handleForgotPassword = async (req, res) => {
 
 		await transporter.sendMail(mailOptions);
 
-		res.status(200).json({ message: "Email for reset password sent successfully", status: "ok", status_code: 200, user: user.name });
+		resSuccess(res, 200, "Email for reset password sent successfully", user.name);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -86,7 +87,7 @@ const handleResetPassword = async (req, res) => {
 		user.password = hashedPassword;
 		await user.save();
 
-		res.status(200).json({ message: "Password reset successfully", status: "ok", status_code: 200, user: user.name });
+		resSuccess(res, 200, "Password reset successfully", user.name);
 	} catch (err) {
 		errorHandler(req, err);
 	}

@@ -2,18 +2,16 @@ const Product = require("../models/Product");
 const Category = require("../models/Category");
 const errorHandler = require("../utils/error-handler");
 const resErr = require("../utils/res-error");
+const resSuccess = require("../utils/res-success");
 
 const getAllProducts = async (req, res) => {
 	try {
 		const products = await Product.find({}, "-__v").populate("categories", "name").exec();
 		if (!products) return res.sendStatus(204);
 
-		res.status(200).json({
-			message: "Products displayed successfully",
-			status: "ok",
-			status_code: 200,
+		resSuccess(res, 200, "Products displayed successfully", {
 			productsCount: products.length,
-			data: products,
+			products,
 		});
 	} catch (err) {
 		errorHandler(req, err);
@@ -28,12 +26,7 @@ const getProductById = async (req, res) => {
 
 		if (!product) return resErr(res, 404, "This product id is not found");
 
-		res.status(200).json({
-			message: "Product displayed successfully",
-			status: "ok",
-			status_code: 200,
-			data: product,
-		});
+		resSuccess(res, 200, "Product displayed successfully", product);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -69,12 +62,7 @@ const handleNewProduct = async (req, res) => {
 			product = await Product.create({ ...req.body });
 		}
 
-		res.status(201).json({
-			message: `Product ${name} is created!`,
-			status: "created",
-			status_code: 201,
-			data: product,
-		});
+		resSuccess(res, 201, `Product ${name} is created!`, product);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -119,12 +107,7 @@ const updateProductById = async (req, res) => {
 
 		const result = await Product.findById(productId).exec();
 
-		res.status(200).json({
-			message: `${result.name} product is updated successfully`,
-			status: "ok",
-			status_code: 200,
-			data: result,
-		});
+		resSuccess(res, 200, `${result.name} product is updated successfully`, result);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -140,12 +123,7 @@ const deleteProductById = async (req, res) => {
 
 		const result = await product.deleteOne();
 
-		res.status(200).json({
-			message: `${result.name} product is deleted successfully`,
-			status: "ok",
-			status_code: 200,
-			data: result,
-		});
+		resSuccess(res, 200, `${result.name} product is deleted successfully`, result);
 	} catch (err) {
 		errorHandler(req, err);
 	}

@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const errorHandler = require("../utils/error-handler");
 const resErr = require("../utils/res-error");
+const resSuccess = require("../utils/res-success");
 
 const transporter = nodemailer.createTransport({
 	host: process.env.SMTP_HOST,
@@ -26,7 +27,7 @@ const handleMessage = async (req, res) => {
 
 		await transporter.sendMail(mailOptions);
 
-		res.status(200).json({ message: "Message sent successfully!", status: "ok", status_code: 200, user: email });
+		resSuccess(res, 200, "Message sent successfully!", email);
 	} catch (err) {
 		errorHandler(req, err);
 	}

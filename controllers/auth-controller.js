@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const errorHandler = require("../utils/error-handler");
 const resErr = require("../utils/res-error");
+const resSuccess = require("../utils/res-success");
 
 const handleLogin = async (req, res) => {
 	try {
@@ -45,15 +46,7 @@ const handleLogin = async (req, res) => {
 			user.save();
 
 			res.cookie("jwt", refreshToken, { httpOnly: true, secure: true, sameSite: "None", maxAge: 24 * 60 * 60 * 1000 });
-
-			res.status(200).json({
-				message: "Authenticated",
-				user: user.email,
-				status: "ok",
-				status_code: 200,
-				accessToken,
-				role,
-			});
+			resSuccess(res, 200, "Authenticated", { user: user.email, accessToken, role });
 		} else {
 			return resErr(res, 401, "Invalid Credentials, please make sure you have a valid email and a correct password for your account!");
 		}

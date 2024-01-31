@@ -4,18 +4,16 @@ const Product = require("../models/Product");
 const mongoose = require("mongoose");
 const errorHandler = require("../utils/error-handler");
 const resErr = require("../utils/res-error");
+const resSuccess = require("../utils/res-success");
 
 const getAllUsers = async (req, res) => {
 	try {
 		const users = await User.find({}, "-password -__v").exec();
 		if (!users) return res.sendStatus(204);
 
-		res.status(200).json({
-			message: "Users displayed successfully",
-			status: "ok",
-			status_code: 200,
+		resSuccess(res, 200, "Users displayed successfully", {
 			usersCount: users.length,
-			data: users,
+			users,
 		});
 	} catch (err) {
 		errorHandler(req, err);
@@ -30,12 +28,7 @@ const getUserById = async (req, res) => {
 		const user = await User.findById(userId, "-password -__v").populate("cart").exec();
 		if (!user) return resErr(res, 404, "User is not found");
 
-		res.status(200).json({
-			message: "User displayed successfully",
-			status: "ok",
-			status_code: 200,
-			data: user,
-		});
+		resSuccess(res, 200, "User displayed successfully", user);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -49,12 +42,7 @@ const getCurrentUser = async (req, res) => {
 		const user = await User.findById(id, "-password -__v").populate({ path: "cart.product_id" }).populate("wishlist").exec();
 		if (!user) return resErr(res, 403, "Invalid credentials");
 
-		res.status(200).json({
-			message: "Get current user successfully",
-			status: "ok",
-			status_code: 200,
-			data: user,
-		});
+		resSuccess(res, 200, "Get current user successfully", user);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -79,12 +67,7 @@ const handleNewUser = async (req, res) => {
 
 		user.password = "Encrypted";
 
-		res.status(201).json({
-			message: `User ${name} is created!`,
-			status: "created",
-			status_code: 201,
-			data: user,
-		});
+		resSuccess(res, 201, `User ${name} is created!`, user);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -109,12 +92,7 @@ const updateUserById = async (req, res) => {
 
 		const result = await User.findById(userId).populate("cart wishlist").exec();
 
-		res.status(200).json({
-			message: `User ${name} is updated sucessfully`,
-			status: "ok",
-			status_code: 200,
-			data: result,
-		});
+		resSuccess(res, 200, `User ${name} is updated sucessfully`, result);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -130,12 +108,7 @@ const deleteUserById = async (req, res) => {
 
 		const result = await user.deleteOne();
 
-		res.status(200).json({
-			message: `User ${user.name} is deleted sucessfully`,
-			status: "ok",
-			status_code: 200,
-			data: result,
-		});
+		resSuccess(res, 200, `User ${user.name} is deleted sucessfully`, result);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -177,7 +150,7 @@ const updateCart = async (req, res) => {
 
 		await user.save().then((data) => data.populate({ path: "cart.product_id" }));
 
-		res.json(user);
+		resSuccess(res, 200, null, user);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -202,7 +175,7 @@ const removeCartItem = async (req, res) => {
 
 		await user.save().then((data) => data.populate({ path: "cart.product_id" }));
 
-		res.json(user);
+		resSuccess(res, 200, null, user);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -239,7 +212,7 @@ const updateWishlist = async (req, res) => {
 
 		await user.save().then((data) => data.populate("wishlist"));
 
-		res.json(user);
+		resSuccess(res, 200, null, user);
 	} catch (err) {
 		errorHandler(req, err);
 	}
@@ -264,7 +237,7 @@ const removeWishlistItem = async (req, res) => {
 
 		await user.save().then((data) => data.populate("wishlist"));
 
-		res.json(user);
+		resSuccess(res, 200, null, user);
 	} catch (err) {
 		errorHandler(req, err);
 	}
