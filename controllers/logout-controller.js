@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const errorHandler = require("../utils/error-handler");
+const resSuccess = require("../utils/res-success");
 
 const handleLogout = async (req, res) => {
 	try {

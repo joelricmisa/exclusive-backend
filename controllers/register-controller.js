@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const errorHandler = require("../utils/error-handler");
 const resErr = require("../utils/res-error");
+const resSuccess = require("../utils/res-success");
 
 const handleNewUser = async (req, res) => {
 	try {

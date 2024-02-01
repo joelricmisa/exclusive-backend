@@ -51,7 +51,7 @@ const getCurrentUser = async (req, res) => {
 const handleNewUser = async (req, res) => {
 	try {
 		const { name, email, password, roles } = req.body;
-		if (!name || !email || !password) return resErr(res, 400, "Please fill up all inputs.");
+		if (!name || !email || !password) return resErr(res, 400, "Please fill out the required fields..");
 
 		const duplicate = await User.findOne({ email }).exec();
 		if (duplicate) return resErr(res, 409, "This email is already used!");
@@ -84,7 +84,7 @@ const updateUserById = async (req, res) => {
 
 		if (!user) return resErr(res, 404, "This user is not found");
 
-		if (!name || !email) return resErr(res, 400, "Please fill up all inputs");
+		if (!name || !email) return resErr(res, 400, "Please fill out the required fields.");
 
 		await User.updateOne({ _id: userId }, { ...req.body });
 

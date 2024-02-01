@@ -35,7 +35,7 @@ const handleNewProduct = async (req, res) => {
 	try {
 		const { name, price, quantity, categoryName } = req.body;
 
-		if (!name || !price || !quantity) return resErr(res, 400, "Please fill up all inputs");
+		if (!name || !price || !quantity) return resErr(res, 400, "Please fill out the required fields.");
 
 		const duplicate = await Product.findOne({ name }).exec();
 
@@ -75,7 +75,7 @@ const updateProductById = async (req, res) => {
 
 		if (!productId) return resErr(res, 400, "Product id is required");
 
-		if (!name || !price || !quantity) return resErr(res, 400, "Please fill up all inputs");
+		if (!name || !price || !quantity) return resErr(res, 400, "Please fill out the required fields.");
 
 		const product = await Product.findById(productId).exec();
 
