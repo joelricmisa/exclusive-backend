@@ -25,12 +25,13 @@ const handleRefreshToken = async (req, res) => {
 					},
 				},
 				process.env.ACCESS_TOKEN,
-				{ expiresIn: "1d" }
+				{ expiresIn: "1h" }
 			);
 
 			resSuccess(res, 200, "Displayed refresh token successfully", {
 				accessToken,
 				user: user.email,
+				role: user.roles,
 			});
 		});
 	} catch (err) {

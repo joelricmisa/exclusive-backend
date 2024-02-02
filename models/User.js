@@ -10,11 +10,11 @@ const userSchema = new Schema(
 		refreshToken: String,
 		roles: {
 			user: {
-				type: Number,
-				default: 1234,
+				type: String,
+				default: "user",
 			},
-			editor: Number,
-			admin: Number,
+			editor: String,
+			admin: String,
 		},
 		wishlist: [
 			{
