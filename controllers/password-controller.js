@@ -12,7 +12,7 @@ const handleChangePassword = async (req, res) => {
 
 		if (!currentPassword || !newPassword) return resErr(res, 400, "Please fill all the fields");
 
-		const user = await User.findById(req.id).exec();
+		const user = await User.findById(req.id).select("+password").exec();
 
 		const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
