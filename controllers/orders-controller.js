@@ -80,10 +80,28 @@ const updateOrderStatus = async (req, res) => {
 	}
 };
 
+const deleteOrderById = async (req, res) => {
+	try {
+		const orderId = req.params.id;
+		if (!orderId) return resErr(res, 400, "Order id is required");
+
+		const order = await Order.findById(orderId).exec();
+
+		if (!order) return resErr(res, 404, "Order is not found");
+
+		const result = await order.deleteOne();
+
+		resSuccess(res, 200, `Order is deleted successfully`, { id: result._id });
+	} catch (err) {
+		errorHandler(req, res, err);
+	}
+};
+
 module.exports = {
 	createOrder,
 	getAllOrders,
 	getOrderById,
 	updateOrderStatus,
 	getOrderByUserId,
+	deleteOrderById,
 };

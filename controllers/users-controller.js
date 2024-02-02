@@ -108,7 +108,7 @@ const deleteUserById = async (req, res) => {
 
 		const result = await user.deleteOne();
 
-		resSuccess(res, 200, `User ${user.name} is deleted sucessfully`, result);
+		resSuccess(res, 200, `User ${user.name} is deleted sucessfully`, { id: result._id });
 	} catch (err) {
 		errorHandler(req, res, err);
 	}

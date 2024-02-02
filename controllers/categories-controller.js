@@ -91,7 +91,7 @@ const deleteCategoryById = async (req, res) => {
 
 		const result = await category.deleteOne();
 
-		resSuccess(res, 200, `${result.name} category is deleted successfully`, result);
+		resSuccess(res, 200, `${result.name} category is deleted successfully`, { id: result._id });
 	} catch (err) {
 		errorHandler(req, res, err);
 	}
